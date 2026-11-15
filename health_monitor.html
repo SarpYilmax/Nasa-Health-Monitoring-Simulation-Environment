@@ -1,0 +1,340 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Health Monitor — Orbital Crew Monitoring</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Sora:wght@500;600;700&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#0b0e14;--pn:#121722;--pn2:#1a2133;--bd:#262e42;--tx:#e6e9f0;--mut:#8a93a6;--ac:#4da3ff;--g1:#4da3ff;--g2:#8b5cf6;--g3:#2fd6a0;--g4:#f472b6;--gl1:rgba(77,163,255,.17);--gl2:rgba(139,92,246,.17);--ok:#2fd6a0;--okb:rgba(47,214,160,.13);--wa:#f2b84b;--wab:rgba(242,184,75,.14);--cr:#ff6b6b;--crb:rgba(255,107,107,.15);color-scheme:dark}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef0f6;--pn:#fff;--pn2:#f3f5fb;--bd:#d8dce8;--tx:#141824;--mut:#5b6478;--ac:#1f6fd1;--g1:#1f6fd1;--g2:#6d3fd6;--g3:#0f8a64;--g4:#c0357f;--gl1:rgba(31,111,209,.12);--gl2:rgba(109,63,214,.12);--ok:#0f8a64;--okb:rgba(15,138,100,.1);--wa:#9a6400;--wab:rgba(154,100,0,.1);--cr:#c0312f;--crb:rgba(192,49,47,.1);color-scheme:light}}
+:root[data-theme="light"]{--bg:#eef0f6;--pn:#fff;--pn2:#f3f5fb;--bd:#d8dce8;--tx:#141824;--mut:#5b6478;--ac:#1f6fd1;--g1:#1f6fd1;--g2:#6d3fd6;--g3:#0f8a64;--g4:#c0357f;--gl1:rgba(31,111,209,.12);--gl2:rgba(109,63,214,.12);--ok:#0f8a64;--okb:rgba(15,138,100,.1);--wa:#9a6400;--wab:rgba(154,100,0,.1);--cr:#c0312f;--crb:rgba(192,49,47,.1);color-scheme:light}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;color:var(--tx);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 90% -10%,var(--gl2),transparent 60%),radial-gradient(800px 500px at 0% 0%,var(--gl1),transparent 55%),var(--bg);background-attachment:fixed}
+button{font:inherit;color:inherit;cursor:pointer}
+.st0{--c:var(--ok);--cb:var(--okb)}.st1{--c:var(--wa);--cb:var(--wab)}.st2{--c:var(--cr);--cb:var(--crb)}
+.shell{display:grid;grid-template-columns:78px 1fr;min-height:100vh}
+.rail{border-right:1px solid var(--bd);background:linear-gradient(180deg,var(--pn),var(--pn2));display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 0}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--g1),var(--g2),var(--g4));display:grid;place-items:center;color:#fff;margin-bottom:10px}
+.rail button{width:62px;padding:8px 0 6px;border-radius:12px;border:1px solid transparent;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--mut);font-size:10px;letter-spacing:.06em}
+.rail button:hover{color:var(--tx)}.rail button.on{color:var(--tx);border-color:var(--bd);background:linear-gradient(135deg,var(--gl1),var(--gl2))}
+.rail button.on svg{stroke:var(--g1)}
+.rail svg,.logo svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.rail .bot{margin-top:auto;display:grid;gap:8px;justify-items:center}.av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--g3),var(--g1));color:#fff;display:grid;place-items:center;font-size:11px;font-weight:600}
+@media(max-width:700px){.shell{grid-template-columns:1fr}.rail{flex-direction:row;justify-content:center;padding:8px;border-right:0;border-bottom:1px solid var(--bd)}.logo{margin:0 6px 0 0;width:34px;height:34px}.rail .bot{margin:0 0 0 auto;display:flex;align-items:center}.av{display:none}main,.top{padding-left:14px!important;padding-right:14px!important}}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 24px;border-bottom:1px solid var(--bd);font-size:12px;letter-spacing:.08em}
+.top b{font-weight:600;letter-spacing:.16em}.top .r{display:flex;gap:18px;align-items:center;color:var(--mut);flex-wrap:wrap}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:6px}
+main{max-width:1200px;padding:22px 24px 30px;margin:0 auto}
+.eb{font-size:11px;letter-spacing:.14em;color:var(--mut)}
+h1{font-size:32px;margin:4px 0;font-weight:700;letter-spacing:-.01em;background:linear-gradient(90deg,var(--g1),var(--g2) 55%,var(--g4));-webkit-background-clip:text;background-clip:text;color:transparent}h2{font-size:16px;margin:0;font-weight:600}
+.row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.btn{background:var(--pn2);border:1px solid var(--bd);border-radius:10px;padding:8px 14px;display:inline-flex;gap:8px;align-items:center}
+.btn:hover{border-color:var(--g1)}.btn.on{border-color:transparent;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2))}
+.sys{margin:18px 0 12px;padding:14px 16px;border:1px solid var(--c);background:linear-gradient(100deg,var(--cb),transparent 80%);border-radius:14px;display:flex;gap:14px;align-items:center}
+.sys strong{color:var(--c)}.sys p{margin:0;color:var(--mut)}.sys .cd{margin-left:auto;font:600 11px ui-monospace,monospace;letter-spacing:.12em;color:var(--c);white-space:nowrap}
+.tool{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}.tool .cap{font-size:11px;letter-spacing:.14em;color:var(--mut)}.tool .tg{border:1px solid var(--bd);border-radius:4px;padding:0 5px;margin-left:6px;font-size:10px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.sh span{font-size:11px;letter-spacing:.12em;color:var(--mut)}
+.vit{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{text-align:left;background:linear-gradient(160deg,var(--pn2),var(--pn));border:1px solid var(--bd);border-radius:14px;padding:14px;display:block;width:100%;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--c),transparent)}
+.card:hover{border-color:var(--c)}.card .t{display:flex;justify-content:space-between;color:var(--mut);font-size:13px}
+.card .v{font-size:32px;font-weight:600;line-height:1.2;margin:6px 0 2px}.card .v small{font-size:13px;color:var(--mut);margin-left:5px;font-weight:400}
+.card .s{font-size:12px;color:var(--c);display:flex;align-items:center;gap:6px}.card .s i{width:7px;height:7px;border-radius:50%;background:var(--c)}.card .s em{margin-left:auto;font:11px ui-monospace,monospace;color:var(--mut);font-style:normal}
+svg.sp{width:100%;height:48px;margin:6px 0}svg.sp polyline{fill:none;stroke:var(--c);stroke-width:2}svg.sp polygon{fill:var(--c);opacity:.14}svg.sp path{stroke:var(--bd);stroke-width:1;fill:none}
+.card .f{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);letter-spacing:.06em}.card .f b{color:var(--tx);font-weight:500}
+.tg3{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-top:16px}
+.tc{position:relative;background:linear-gradient(160deg,var(--pn2),var(--pn));border:1px solid var(--bd);border-radius:16px;padding:20px 18px 18px;overflow:hidden;display:flex;flex-direction:column;gap:8px}
+.tc::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--ga),var(--gb))}
+.tc p{margin:0;color:var(--mut)}.tc .m{font-size:12px;color:var(--mut)}.tc .m b{color:var(--tx)}.tc .sf{font-size:12px;color:var(--wa)}
+.big{min-height:60px;font-size:16px;font-weight:600;justify-content:center;width:100%;margin-top:auto}
+.big.w{background:var(--wab);color:var(--wa);border-color:var(--wa)}.big.g{background:var(--okb);color:var(--ok);border-color:var(--ok)}
+.hint{display:block;font-size:11px;letter-spacing:.1em;color:var(--mut);text-align:center;min-height:16px}
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pad{height:78px;border-radius:14px;border:0;background:var(--pg);opacity:.42;transition:opacity .12s,transform .12s,box-shadow .12s}
+.pad.lit{opacity:1;transform:scale(1.04);box-shadow:0 0 26px var(--pc)}
+.bt{font:600 40px ui-monospace,monospace;text-align:center;background:linear-gradient(90deg,var(--g3),var(--g1));-webkit-background-clip:text;background-clip:text;color:transparent}
+.adv{margin-top:16px}.al{display:flex;gap:10px;padding:10px 12px;border:1px solid var(--c);background:linear-gradient(100deg,var(--cb),transparent 90%);border-radius:12px;margin-bottom:8px}.al strong{color:var(--c)}.al p{margin:0}
+footer{margin-top:22px;padding-top:12px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:11px;letter-spacing:.08em;color:var(--mut)}
+.bk{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px;z-index:5}
+.md{width:min(480px,100%);max-height:90vh;overflow:auto;background:var(--pn);border:1px solid var(--bd);border-radius:16px;padding:18px}
+.md h3{font-size:12px;letter-spacing:.1em;color:var(--mut);margin:14px 0 2px;font-weight:600}.md p{margin:0}
+.md .rd{font-size:34px;font-weight:600;color:var(--c)}.md .rd small{font-size:14px;color:var(--mut)}.md pre{font-size:12px;background:var(--pn2);padding:10px;border-radius:8px;overflow:auto}
+.md .ad{margin-top:12px;padding:10px;border:1px solid var(--c);background:var(--cb);border-radius:8px}
+:root{--bg:#04060d;--pn:#0a1020;--pn2:#0f1830;--bd:#1b2644;--tx:#e8edf8;--mut:#8b97b3;--ac:#2f7bff;--g1:#2f7bff;--g2:#ff9a4d;--g3:#6aa8ff;--g4:#ffb780;--gl1:rgba(47,123,255,.22);--gl2:rgba(255,154,77,.13)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f2f5fc;--pn:#fff;--pn2:#eef2fb;--bd:#d6deef;--tx:#0a1020;--mut:#55607a;--ac:#1f5fe0;--g1:#1f5fe0;--g2:#e8742a;--g3:#3d7bea;--g4:#f09a5c;--gl1:rgba(31,95,224,.12);--gl2:rgba(232,116,42,.1)}}
+:root[data-theme="light"]{--bg:#f2f5fc;--pn:#fff;--pn2:#eef2fb;--bd:#d6deef;--tx:#0a1020;--mut:#55607a;--ac:#1f5fe0;--g1:#1f5fe0;--g2:#e8742a;--g3:#3d7bea;--g4:#f09a5c;--gl1:rgba(31,95,224,.12);--gl2:rgba(232,116,42,.1)}
+.card,.tc,.sys,.al,.md,.btn,.pad,.rail button{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease,background .25s ease,opacity .25s ease}
+.card{border-radius:18px;box-shadow:0 10px 30px -14px rgba(0,0,0,.55)}.card:hover{transform:translateY(-3px);box-shadow:0 16px 36px -14px var(--c)}
+.tc{border-radius:20px;box-shadow:0 14px 40px -18px rgba(0,0,0,.6)}.sys{border-radius:18px}.al{border-radius:14px}.md{border-radius:20px}
+.btn{border-radius:999px;padding:9px 18px}.big{border-radius:18px}.pad{border-radius:18px}.rail button{border-radius:14px}
+.btn.on{background:linear-gradient(135deg,#2563ff,#4d8dff);color:#fff;border-color:transparent;box-shadow:0 6px 18px -6px rgba(47,123,255,.7)}
+.logo{border-radius:14px;box-shadow:0 8px 20px -8px rgba(47,123,255,.7)}
+svg.sp polyline{stroke-linecap:round;stroke-linejoin:round}
+.bt{background:linear-gradient(90deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.hero{position:relative;margin:-22px -24px 18px;padding:64px 24px 56px;min-height:460px;overflow:hidden;text-align:center;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(1.5px 1.5px at 8% 14%,#fff,transparent),radial-gradient(1px 1px at 22% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 35% 10%,#fff,transparent),radial-gradient(1px 1px at 61% 22%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 12%,#fff,transparent),radial-gradient(1px 1px at 90% 28%,#fff,transparent),radial-gradient(1px 1px at 48% 34%,#fff,transparent),radial-gradient(ellipse 55% 48% at 50% 108%,#ff9a4d 0,rgba(255,154,77,.55) 38%,transparent 72%),radial-gradient(ellipse 42% 75% at 50% 45%,rgba(47,123,255,.95),rgba(47,123,255,.35) 52%,transparent 78%),linear-gradient(180deg,#02040a 0%,#06103a 42%,#0a2a8a 72%,#05070f 100%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,transparent 60%,var(--bg) 100%),repeating-linear-gradient(90deg,rgba(0,0,0,.5) 0 3px,transparent 3px 8px)}
+.hero .eb{color:rgba(255,255,255,.7)}
+.hero h1{font:500 clamp(42px,7.5vw,80px)/1.04 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.035em;margin:0;background:none;-webkit-text-fill-color:#fff;color:#fff}
+.hero p{max-width:470px;margin:0;color:rgba(255,255,255,.78);font-size:15px}
+.hs{position:absolute;top:36%;display:grid;gap:20px}.hs.l{left:28px;text-align:left}.hs.r{right:28px;text-align:right}.hs b{display:block;font-size:34px;font-weight:500;line-height:1.1}.hs span{font-size:12px;opacity:.72}
+.hex{position:absolute;top:18px;right:24px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.35);color:#fff;backdrop-filter:blur(6px)}
+.hb{width:96px;height:96px;border-radius:50%;border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.12);backdrop-filter:blur(6px);box-shadow:0 0 0 12px rgba(255,255,255,.07),0 0 46px rgba(255,154,77,.55);color:#fff;font-size:13px;font-weight:500;display:grid;place-items:center;margin-top:10px;transition:transform .25s ease,box-shadow .25s ease}.hb:hover{transform:scale(1.06);box-shadow:0 0 0 14px rgba(255,255,255,.1),0 0 60px rgba(255,154,77,.75)}
+@media(max-width:900px){.hs{display:none}}
+@media(max-width:700px){.hero{margin:-22px -14px 18px;min-height:400px}}
+body{font-family:"Hanken Grotesk",system-ui,sans-serif}h1,h2,.hero h1,.card .v,.hs b{font-family:Sora,system-ui,sans-serif}
+.hero::before{display:none}.hero{background:#02040a}#au{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+.card{--mx:50%;--my:50%}.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx) var(--my),color-mix(in srgb,var(--c) 26%,transparent),transparent 70%)}.card:hover::after{opacity:1}
+
+/* compact hero + shader background */
+.hero{min-height:0;padding:30px 24px 28px;gap:10px;margin-bottom:14px}
+.hero h1{font-size:clamp(32px,5vw,50px);text-shadow:0 2px 28px rgba(2,4,10,.85)}
+.hero p{font-size:14px;max-width:520px;text-shadow:0 1px 14px rgba(2,4,10,.7)}
+.hero .eb{text-shadow:0 1px 10px rgba(2,4,10,.7)}
+.hs{top:50%;transform:translateY(-50%);gap:12px}.hs b{font-size:24px}
+.hb{width:auto;height:40px;padding:0 24px;border-radius:999px;margin-top:4px;box-shadow:0 0 0 6px rgba(255,255,255,.06),0 0 30px rgba(77,140,255,.55)}
+.hb:hover{box-shadow:0 0 0 8px rgba(255,255,255,.09),0 0 40px rgba(77,140,255,.8)}
+.hero::after{background:linear-gradient(180deg,transparent 0%,transparent 78%,var(--bg) 100%)}
+@media(max-width:700px){.hero{min-height:0;padding:26px 14px 24px}}
+
+/* glass surfaces (frosted look from React Bits GlassSurface) */
+:root{--glass:light-dark(rgba(255,255,255,.55),rgba(255,255,255,.06));--glass-hi:light-dark(rgba(255,255,255,.9),rgba(255,255,255,.3));--glass-lo:light-dark(rgba(255,255,255,.45),rgba(255,255,255,.08));--glass-ring:light-dark(rgba(10,16,32,.12),rgba(255,255,255,.28));--glass-halo:light-dark(rgba(255,255,255,.55),rgba(255,255,255,.09));--glass-sheen:light-dark(rgba(255,255,255,.5),rgba(255,255,255,.16));--glass-sheen2:light-dark(rgba(255,255,255,.2),rgba(255,255,255,.05))}
+.hb,.btn:not(.on),.rail button.on{position:relative;isolation:isolate;background:var(--glass);-webkit-backdrop-filter:blur(14px) saturate(1.5) brightness(1.04);backdrop-filter:blur(14px) saturate(1.5) brightness(1.04);box-shadow:inset 0 1px 0 0 var(--glass-hi),inset 0 -1px 0 0 var(--glass-lo),inset 0 0 2px 1px var(--glass-ring),inset 0 0 12px 3px var(--glass-halo),0 4px 16px rgba(2,4,10,.14),0 12px 36px rgba(2,4,10,.14)}
+.hb::before,.btn:not(.on)::before,.rail button.on::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,var(--glass-sheen) 0%,transparent 42%,transparent 64%,var(--glass-sheen2) 100%)}
+.hb{color:#fff;box-shadow:inset 0 1px 0 0 rgba(255,255,255,.4),inset 0 0 2px 1px rgba(255,255,255,.3),inset 0 0 12px 3px rgba(255,255,255,.1),0 0 30px rgba(77,140,255,.5),0 12px 36px rgba(2,4,10,.2)}
+.hb::before{--glass-sheen:rgba(255,255,255,.2);--glass-sheen2:rgba(255,255,255,.06)}
+.rail{background:linear-gradient(180deg,light-dark(rgba(255,255,255,.62),rgba(15,24,48,.55)),light-dark(rgba(243,245,251,.5),rgba(10,16,32,.5)));-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset -1px 0 0 var(--glass-lo)}
+.rail button.on{border-color:transparent}
+.sys{-webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3);box-shadow:inset 0 1px 0 var(--glass-hi),inset 0 0 14px 2px var(--glass-halo)}
+.card,.tc{box-shadow:inset 0 1px 0 var(--glass-lo),0 10px 30px -14px rgba(0,0,0,.55)}
+.bk{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.md{background:light-dark(rgba(255,255,255,.76),rgba(12,20,40,.62));-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);box-shadow:inset 0 1px 0 var(--glass-hi),inset 0 0 2px 1px var(--glass-ring),inset 0 0 14px 3px var(--glass-halo),0 24px 64px rgba(0,0,0,.45)}
+/* export panel */
+.md.wide{width:min(680px,100%)}
+.md .xm{color:var(--mut);font-size:12px;margin:2px 0 12px}
+.xs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.xs div{padding:10px 12px;border-radius:14px;border:1px solid var(--bd);background:var(--glass)}
+.xs b{display:block;font:600 22px Sora,system-ui,sans-serif;line-height:1.2}
+.xs span{font-size:11px;letter-spacing:.1em;color:var(--mut)}
+.xw{overflow-x:auto;margin-top:6px}
+table.xt{width:100%;border-collapse:collapse;font-size:12.5px}
+.xt th{text-align:left;font-size:10px;letter-spacing:.1em;color:var(--mut);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--bd)}
+.xt td{padding:7px 8px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.xt td.n{font:500 13px ui-monospace,monospace;font-variant-numeric:tabular-nums}.xt td.n small{color:var(--mut)}.xt .rg{color:var(--mut)}
+.pl{display:inline-block;padding:1px 9px;border-radius:999px;font-size:11px;color:var(--c);background:var(--cb);border:1px solid var(--c)}
+.xf{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}.xf .btn{padding:6px 16px}
+#xp{max-height:220px;margin:0;white-space:pre}
+.xa{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.md .xn{font-size:11px;color:var(--mut);margin-top:10px}
+</style>
+<style id="uranusConsolePalette">:root{--bg:#100d17;--pn:#17131e;--pn2:#211a2b;--bd:#382a43;--tx:#f5effa;--mut:#b7a9c5;--ac:#7650a8;--g1:#4b246c;--g2:#7650a8;--g3:#b51f4b;--g4:#c981a0;--gl1:rgba(118,80,168,.2);--gl2:rgba(75,36,108,.2);--ok:#789879;--okb:rgba(120,152,121,.13);--wa:#c19245;--wab:rgba(193,146,69,.14);--cr:#b51f4b;--crb:rgba(181,31,75,.16);color-scheme:dark}.hero::before{background:radial-gradient(ellipse 55% 48% at 50% 108%,#b51f4b 0,rgba(181,31,75,.35) 38%,transparent 72%),radial-gradient(ellipse 42% 75% at 50% 45%,rgba(118,80,168,.95),rgba(75,36,108,.42) 52%,transparent 78%),linear-gradient(180deg,#100d17 0%,#241635 42%,#4b246c 72%,#100d17 100%)}.hero .hb{box-shadow:0 0 0 6px #ffffff10,0 0 30px #7650a888}.btn.on{background:linear-gradient(135deg,#4b246c,#7650a8);box-shadow:0 6px 18px -6px #7650a888}.uranus-feed{margin:10px 0 14px;padding:11px 14px;border:1px solid #7650a8;border-left:4px solid #b51f4b;border-radius:9px;background:linear-gradient(100deg,#4b246c33,#17131e);color:#f5effa;font-size:12px}.uranus-feed b{color:#e3c9f3}.top .dot{background:#b51f4b}
+/* tests: start buttons aligned on one line */
+.tc .btn.big{margin-top:auto}
+</style>
+<div class="shell">
+<nav class="rail" aria-label="Sections">
+<div class="logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-30 12 12)"/></svg></div>
+<button class="on" id="n1" aria-label="Crew health"><svg viewBox="0 0 24 24"><polyline points="3 12 7 12 10 5 14 19 17 12 21 12"/></svg><span>Health</span></button>
+<button id="n2" aria-label="Tests"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/></svg><span>Tests</span></button>
+<div class="bot"><button id="n3" aria-label="Export telemetry"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14"/></svg><span>Export</span></button></div>
+</nav>
+<div>
+<div class="top"><b>Uranuß · MISSION CONTROL</b><div class="r"><span id="uplink"><i class="dot"></i>SIMULATION FEED</span><span id="clk">00:00:00 UTC</span><span id="missionContext"> EXP. 47</span></div></div>
+<main>
+<div id="v1">
+<section class="hero"><canvas id="au" aria-hidden="true"></canvas><div class="hs l"><div><b>13</b><span>Live channels</span></div><div><b>03</b><span>Health tests</span></div></div><div class="hs r"><div><b>047</b><span>Mission day</span></div><div><b>24/7</b><span>Monitoring</span></div></div><div class="eb">HUMAN SPACEFLIGHT / CREW SYSTEMS</div><h1>Health Monitor</h1><p>Track vital signs, run quick health tests and get guidance in real time.</p><button class="hb" id="hb" aria-label="Run health tests">Run tests</button></section>
+<div class="uranus-feed" id="uranusFeed" hidden></div><div class="sys" id="sys"></div>
+<div class="sh"><h2>Crew vitals</h2><span id="lv"></span></div><div class="vit" id="vit"></div>
+<section class="adv" id="adv"></section>
+</div>
+<div id="v2" hidden>
+<div class="eb">COGNITIVE AND RESPIRATORY CHECKS</div><h1>Health function tests.</h1>
+<div class="eb" style="letter-spacing:.04em;font-size:13px">Quick checks you can run anytime. Each result updates the dashboard.</div>
+<div class="tg3">
+<section class="tc" style="--ga:var(--g1);--gb:var(--g2)"><div class="eb">PSYCHOMOTOR VIGILANCE</div><h2>Reaction time</h2><p>Tap as soon as the button turns green. Slower reactions can signal fatigue.</p><div class="m">BASELINE <b>260 ms</b> · LAST <b id="lr">—</b></div><button class="btn big" id="rb">Begin assessment</button><span class="hint" id="rh">WAIT FOR THE GREEN SIGNAL</span></section>
+<section class="tc" style="--ga:var(--g2);--gb:var(--g4)"><div class="eb">WORKING MEMORY</div><h2>Sequence memory</h2><p>Watch the lights, then repeat the pattern. It grows by one each round.</p>
+<div class="pads"><button class="pad" style="--pg:linear-gradient(135deg,#4d8dff,#1d4fe0);--pc:#2f7bff" aria-label="Blue pad"></button><button class="pad" style="--pg:linear-gradient(135deg,#9cc4ff,#5a95f5);--pc:#7fb0ff" aria-label="Sky pad"></button><button class="pad" style="--pg:linear-gradient(135deg,#ffb06b,#f2792b);--pc:#ff9a4d" aria-label="Orange pad"></button><button class="pad" style="--pg:linear-gradient(135deg,#ffd9b8,#ffb780);--pc:#ffc58f" aria-label="Peach pad"></button></div>
+<div class="m">BASELINE <b>7 items</b> · LAST <b id="lm">—</b></div><button class="btn big" id="mb">Start</button><span class="hint" id="mst">PRESS START</span></section>
+<section class="tc" style="--ga:var(--g3);--gb:var(--g1)"><div class="eb">RESPIRATORY RESERVE</div><h2>Breath hold</h2><p>Sit still, take a normal breath, hold it and press the button at the first strong urge to breathe.</p><div class="bt" id="bt">0.0 s</div><div class="sf">Stop if you feel dizzy. Do not repeat more than twice.</div><div class="m">BASELINE <b>32 s</b> · LAST <b id="lb">—</b></div><button class="btn big" id="bb">Start breath hold</button><span class="hint"></span></section>
+</div>
+</div>
+<footer><span><i class="dot"></i>Uranuß · HEALTH MONITOR </span><span></span><span></span></footer>
+</main></div></div>
+<div id="mo"></div>
+<script>
+const M=[
+{k:"hr",n:"Heart rate",u:"bpm",d:0,r:"50–100 bpm",b:72,sv:v=>v>120||v<45?2:v>100||v<50?1:0,why:"Microgravity shifts body fluids and changes how hard the heart works. Resting heart rate tracks cardiovascular adaptation and stress.",how:"Wrist or chest sensor at rest, or two fingers on the wrist for 30 s, twice.",g:["Rest, hydrate and recheck in 10 minutes.","Stop activity, sit down and notify the flight surgeon."]},
+{k:"spo2",n:"Blood oxygen",u:"%",d:0,r:"95–100 %",b:97,sv:v=>v<90?2:v<95?1:0,why:"Cabin air mix, scrubber faults or suit leaks can lower oxygen. Low SpO₂ impairs thinking within minutes.",how:"Fingertip or wrist pulse oximeter, still for 30 s, warm hands.",g:["Check sensor fit, breathe slowly and check cabin O₂ level.","Put on the oxygen mask per procedure, stop activity and call the flight surgeon now."]},
+{k:"temp",n:"Body temperature",u:"°C",d:1,r:"36.0–37.5 °C",b:36.7,sv:v=>v>=38.5||v<35.5?2:v>37.5||v<36?1:0,why:"Heat is hard to shed without convection. Fever or overheating can signal infection or cooling-system problems.",how:"Skin patch or forehead thermometer, away from vents.",g:["Cool the area, drink water and recheck in 15 minutes.","Remove layers, start active cooling and notify the flight surgeon."]},
+{k:"sleep",n:"Sleep",u:"h",d:1,r:"7–9 h",b:7.4,sv:v=>v<5.5?2:v<7?1:0,why:"Light cycles and noise disrupt sleep in orbit. Short sleep reduces alertness and raises error risk.",how:"Wrist motion sensor logs sleep automatically, or log it manually.",g:["Plan a protected rest block today.","Skip strenuous tasks, schedule recovery sleep and tell the medical officer."]},
+{k:"stress",n:"Stress index",u:"/100",d:0,r:"0–40",b:30,sv:v=>v>70?2:v>40?1:0,why:"Isolation and confinement raise stress. Heart-rate variability and skin conductance show strain before mood does.",how:"Derived from HRV (ECG) and skin conductance at the wrist.",g:["Try a 5-minute paced breathing exercise.","Talk with crewmates or ground psychological support today."]},
+{k:"co2",n:"Cabin CO₂",u:"ppm",d:0,r:"< 3,000 ppm",b:2200,sv:v=>v>5000?2:v>3000?1:0,why:"CO₂ builds up where air does not rise or mix. High levels cause headaches, drowsiness and poor focus.",how:"Habitat CO₂ monitor or helmet air-duct sensor.",g:["Check ventilation and scrubbers, reduce exertion.","Move to clean air, check the CO₂ removal system and alert the crew."]},
+{k:"rad",n:"Radiation dose signal",u:"demo units",d:0,r:"Demo alert trigger ≥ 2,500 units",b:520,sv:v=>v>=2500?2:v>=1500?1:0,why:"Environmental dosimeter signal imported from the Uranuß scenario. Units and trigger are illustrative only; this is not a biological dose assessment.",how:"Uranuß synthetic mission-computer packet; verify real dosimeter calibration and units before operational use.",g:["Review the synthetic dosimeter record and mission context.","Demo trigger matched. Follow the approved mission radiation procedure."]},
+{k:"resp",n:"Respiratory rate",u:"br/min",d:0,r:"12–20 br/min",b:15,sv:v=>v>28||v<8?2:v>20||v<12?1:0,why:"Breathing rate rises early with raised CO₂, low oxygen, exertion or stress, often before SpO₂ changes. It is one of the first vital signs to shift.",how:"Chest-strap or wrist sensor at rest, or count breaths for 30 s and double it.",g:["Slow your breathing, rest and check cabin CO₂ and O₂ levels.","Stop activity, check cabin atmosphere and notify the flight surgeon."]},
+{k:"glu",n:"Blood glucose",u:"mg/dL",d:0,r:"Fasting 70–99 · post-meal < 140 mg/dL",b:88,sv:v=>v<54||v>250?2:v<70||v>140?1:0,why:"Meal timing, workload, stress and microgravity metabolism shift blood glucose. Low values impair judgment within minutes; high post-meal values signal metabolic strain. Note whether the reading is fasting or post-meal.",how:"Fingertip meter or continuous glucose sensor. Record fasting, post-meal (about 2 h) or random.",g:["Review meal timing and the nutrition plan, then recheck in 15 minutes.","Stop activity, follow the approved glucose procedure and notify the flight surgeon."]},
+{k:"usg",n:"Hydration (urine concentration)",u:"SG",d:3,r:"1.005–1.020 specific gravity",b:1.012,sv:v=>v>=1.03||v<1.003?2:v>1.02||v<1.005?1:0,why:"Fluids shift toward the head in microgravity and thirst is blunted. Concentrated urine (higher specific gravity) points to under-hydration.",how:"Urine specific-gravity strip or refractometer, first void of the day or as scheduled.",g:["Drink water per plan and recheck at the next void.","Start the hydration protocol and notify the flight surgeon."]},
+{k:"rt",t:1,n:"Reaction time",u:"ms",d:0,r:"< 300 ms",b:260,sv:v=>v>400?2:v>300?1:0,why:"Reaction-time tests (PVT) detect fatigue and cognitive slowing, a known concern for long missions.",how:"Run the reaction test on the Tests page or the watch button test.",g:["Retest after a break and avoid critical tasks.","Hand off critical tasks and report fatigue."]},
+{k:"mem",t:1,n:"Memory span",u:"items",d:0,r:"≥ 6 items",b:7,sv:v=>v<4?2:v<6?1:0,why:"Working memory drops with sleep loss, stress and elevated CO₂. It is an early sign of cognitive strain.",how:"Run the sequence memory test on the Tests page, rested and without distractions.",g:["Retest after rest. Avoid complex procedures until it recovers.","Pair up for critical tasks and report persistent memory lapses to the flight surgeon."]},
+{k:"bh",t:1,n:"Breath hold",u:"s",d:0,r:"25–45 s",b:32,sv:v=>v<15?2:v<25?1:0,why:"Breath-hold time is a simple check of respiratory reserve and CO₂ tolerance. Shorter times can follow fatigue or reduced lung function.",how:"Run the breath-hold test seated and rested. Stop at the first strong urge to breathe.",g:["Retest rested and seated. Check cabin air quality.","Report a persistently short breath hold to the flight surgeon."]}];
+const SC={normal:{},lowo2:{hr:108,spo2:88,co2:2600,stress:55},co2:{co2:5600,hr:95,spo2:94,stress:55},sleep:{sleep:4.5,stress:75,hr:82}};
+const SN={normal:"Nominal",lowo2:"Low oxygen",co2:"CO₂ rise",sleep:"Poor sleep"},L=["Nominal","Attention","Critical"];
+const R={},H={};M.forEach((m,i)=>{R[m.k]=m.b;H[m.k]=Array.from({length:36},(_,j)=>m.b+Math.sin(j*1.7+i)*(m.k==="co2"?36:m.k==="temp"?.08:m.k==="mem"?.4:m.k==="usg"?.002:m.k==="glu"?3:1.4))});
+let scn="normal",srcLabel="",paused=false,sel=null,mode="",xf="json",xr="now",snap=null,lastE="";const $=id=>document.getElementById(id);
+const sv=m=>m.sv(R[m.k]),val=m=>m.k==="co2"?Math.round(R[m.k]).toLocaleString("en-US"):R[m.k].toFixed(m.d);
+function sp(a){const mn=Math.min(...a),mx=Math.max(...a),r=mx-mn||1,p=a.map((v,i)=>(i*300/(a.length-1)).toFixed(1)+","+(44-(v-mn)/r*28).toFixed(1)).join(" ");return '<svg class="sp" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18H300M0 38H300"/><polygon points="0,56 '+p+' 300,56"/><polyline points="'+p+'"/></svg>'}
+function render(){const w=Math.max(...M.map(sv));
+$("sys").className="sys st"+w;window.AUC=[["#2fd6a0","#2f7bff","#2fd6a0"],["#ffc247","#ff7a2f","#ffc247"],["#ff4d5e","#ff2f9a","#ff4d5e"]][w];$("sys").innerHTML="<div><strong>"+["All systems nominal","Crew attention required","Critical health alert"][w]+"</strong><p>"+["Crew vitals and cabin conditions are within operational parameters.","Check highlighted indicators and follow the recommended actions.","Act now and contact the flight surgeon."][w]+'</p></div><span class="cd">'+["SYS.NORMAL","SYS.CAUTION","SYS.CRITICAL"][w]+"</span>";
+$("vit").innerHTML=M.map((m,i)=>{const s=sv(m);return '<button class="card st'+s+'" data-k="'+m.k+'" aria-label="'+m.n+": "+val(m)+" "+m.u+". "+L[s]+'. View details"><div class="t"><span>'+m.n+'</span><span aria-hidden="true">↗</span></div><div class="v">'+val(m)+"<small>"+m.u+'</small></div><div class="s"><i></i>'+L[s]+"<em>"+dl(m)+"</em></div>"+sp(H[m.k])+'<div class="f"><span>'+(m.k==="sleep"?"LAST SLEEP CYCLE":m.t?"FROM TESTS":"OPTIMAL RANGE")+"</span><b>"+m.r+"</b></div></button>"}).join("");
+const al=M.filter(m=>sv(m)>0);$("adv").innerHTML=al.length?'<div class="sh"><h2>Medical advisories</h2><span>'+al.length+" ACTIVE</span></div>"+al.map(m=>{const s=sv(m);return '<div class="al st'+s+'"><span aria-hidden="true">▲</span><div><strong>'+m.n+" · "+L[s]+"</strong><p>"+m.g[s-1]+"</p></div></div>"}).join(""):"";
+$("lv").textContent=(paused?"PAUSED":"LIVE TELEMETRY")+" · "+String(M.length).padStart(2,"0")+" CHANNELS";
+modal();spot()}
+function modal(){const e=$("mo");if(!mode){lastE="";e.innerHTML="";return}if(mode==="e"){const k=xf+"|"+xr+"|"+snap.timestamp;if(k===lastE&&e.firstChild)return;lastE=k}let h="";
+if(mode==="d"){const m=M.find(x=>x.k===sel),s=sv(m);h='<div class="st'+s+'"><div class="eb">SENSOR DETAILS</div><h2>'+m.n+'</h2><div class="rd">'+val(m)+" <small>"+m.u+" · "+L[s]+"</small></div></div><h3>WHY IT MATTERS</h3><p>"+m.why+"</p><h3>MEASUREMENT PROTOCOL</h3><p>"+m.how+"</p>"+(s?'<div class="ad st'+s+'">'+m.g[s-1]+"</div>":"")+'<h3>OPTIMAL RANGE</h3><p>'+m.r+"</p>"+(m.t?'<button class="btn on" id="gt" style="margin-top:14px">Run this test</button>':"")}
+else if(mode==="h")h='<div class="eb">MISSION INFORMATION</div><h2>Health Monitor</h2><p>Mission day 47 · International Space Station · Harmony module.</p><p style="margin-top:8px">All health readings in this console are simulated. This is not a clinical monitoring system or a substitute for medical advice.</p>';
+else h=exportView();
+e.innerHTML='<div class="bk" id="bk"><section class="md'+(mode==="e"?" wide":"")+'" role="dialog" aria-modal="true"><div style="text-align:right"><button class="btn" id="cl" aria-label="Close details">Close</button></div>'+h+"</section></div>"}
+function show(v){$("v1").hidden=v!=="1";$("v2").hidden=v!=="2";$("n1").classList.toggle("on",v==="1");$("n2").classList.toggle("on",v==="2");scrollTo({top:0})}
+function rec(k,v){R[k]=v;H[k]=[...H[k].slice(1),v];render()}
+setInterval(()=>{if(paused)return;M.forEach(m=>{if(m.t)return;const t=SC[scn][m.k]!==undefined?SC[scn][m.k]:m.b;let v=R[m.k]+(t-R[m.k])*.25+(Math.random()-.5)*(m.k==="co2"?60:m.k==="sleep"?.02:m.k==="temp"?.03:m.k==="usg"?.002:m.k==="glu"?2:m.k==="resp"?.6:.8);v=Math.max(m.k==="spo2"?80:0,Math.min(m.k==="spo2"?100:1e5,v));R[m.k]=v;H[m.k]=[...H[m.k].slice(1),v]});render()},1500);
+setInterval(()=>{$("clk").textContent=new Date().toISOString().slice(11,19)+" UTC"},1000);
+document.addEventListener("click",e=>{const t=e.target;let c;
+if(c=t.closest(".card")){sel=c.dataset.k;mode="d";modal()}
+else if(t.closest("#gt")){mode="";modal();show("2")}
+else if(c=t.closest("[data-xf]")){xf=c.dataset.xf;lastE="";modal()}
+else if(t.closest("#xrf")){snap=snapshot();lastE="";modal()}
+else if(c=t.closest("[data-xr]")){xr=c.dataset.xr;lastE="";modal()}
+else if(t.closest("#xdl")){xdown()}
+else if(c=t.closest("#xcp")){const done=ok=>{c.textContent=ok?"Copied":"Press Ctrl/Cmd+C to copy";if(!ok){const pr=$("xp");if(pr){const r=document.createRange();r.selectNodeContents(pr);const g=getSelection();g.removeAllRanges();g.addRange(r)}}};try{navigator.clipboard.writeText(exportText()).then(()=>done(true),()=>done(false))}catch(_){done(false)}}
+else if(t.closest("#cl")||t.id==="bk"){mode="";modal()}
+else if(t.closest("#n3")){xr="now";snap=snapshot();mode="e";lastE="";modal()}else if(t.closest("#n4")){mode="h";modal()}
+else if(t.closest("#hb"))show("2");else if(t.closest("#n1"))show("1");else if(t.closest("#n2"))show("2")});
+let rs=0,t0=0,to;const rb=$("rb"),rh=$("rh");
+rb.onclick=()=>{if(rs===0){rs=1;rb.className="btn big w";rb.textContent="Wait for green…";rh.textContent="STAND BY · DO NOT TAP YET";to=setTimeout(()=>{rs=2;t0=performance.now();rb.className="btn big g";rb.textContent="TAP NOW";rh.textContent="SIGNAL ACTIVE"},1000+Math.random()*2000)}
+else if(rs===1){clearTimeout(to);rs=0;rb.className="btn big";rb.textContent="Begin assessment";rh.textContent="EARLY RESPONSE — TRY AGAIN"}
+else{const ms=Math.round(performance.now()-t0);rs=0;rb.className="btn big";rb.textContent="Repeat assessment";rh.textContent="RESPONSE RECORDED · "+ms+" ms";$("lr").textContent=ms+" ms";rec("rt",ms)}};
+let seq=[],pos=0,busy=false,live=false;const pads=[...document.querySelectorAll(".pad")],mst=$("mst"),mb=$("mb");
+function flash(i,d){pads[i].classList.add("lit");setTimeout(()=>pads[i].classList.remove("lit"),d||380)}
+function play(){busy=true;mst.textContent="WATCH THE SEQUENCE…";seq.forEach((p,j)=>setTimeout(()=>flash(p),600+j*650));setTimeout(()=>{busy=false;pos=0;mst.textContent="YOUR TURN · REPEAT "+seq.length},600+seq.length*650)}
+mb.onclick=()=>{if(busy)return;seq=[Math.random()*4|0];live=true;mb.textContent="Restart";play()};
+pads.forEach((p,i)=>p.onclick=()=>{if(!live||busy)return;flash(i,200);if(i===seq[pos]){pos++;if(pos===seq.length){mst.textContent="CORRECT · NEXT ROUND";seq.push(Math.random()*4|0);busy=true;setTimeout(play,800)}}else{live=false;const s=seq.length-1;mst.textContent="MISSED · MEMORY SPAN "+s;mb.textContent="Try again";$("lm").textContent=s+" items";rec("mem",s)}});
+let bt0=0,bi=null;const bb=$("bb");
+bb.onclick=()=>{if(!bi){bt0=performance.now();bb.textContent="I need to breathe";bb.className="btn big g";bi=setInterval(()=>{const s=(performance.now()-bt0)/1000;$("bt").textContent=s.toFixed(1)+" s";if(s>=120)bb.click()},100)}
+else{clearInterval(bi);bi=null;const s=Math.round((performance.now()-bt0)/1000);bb.textContent="Start breath hold";bb.className="btn big";$("lb").textContent=s+" s";rec("bh",s)}};
+window.ingest=o=>{M.forEach(m=>{if(o[m.k]!==undefined){R[m.k]=Number(o[m.k]);SC[scn][m.k]=R[m.k];H[m.k]=[...H[m.k].slice(1),R[m.k]]}});hrec("uranus",true);render()};
+window.addEventListener("message",e=>{if(e.source!==parent||!e.data||e.data.type!=="uranus-health-data"||!e.data.values)return;const incoming=e.data.values,units=e.data.units||{};srcLabel=String(e.data.label||"");const allowed={hr:{key:"hr",unit:"bpm"},spo2:{key:"spo2",unit:"%"},temp:{key:"temp",unit:"Cel"},sleep:{key:"sleep",unit:"h"},co2:{key:"co2",unit:"ppm"},rad:{key:"rad",unit:"demo_units"},resp:{key:"resp",unit:"/min"},glu:{key:"glu",unit:"mg/dL"},usg:{key:"usg",unit:"SG"}};const accepted={};Object.entries(allowed).forEach(([from,to])=>{if(incoming[from]!==undefined&&Number.isFinite(Number(incoming[from]))&&units[from]===to.unit)accepted[to.key]=Number(incoming[from])});window.ingest(accepted);const box=$("uranusFeed");box.hidden=false;box.innerHTML='<b>Uranuß ONBOARD LINK · SYNTHETIC DATA IMPORTED</b><br>';box.append(document.createTextNode(Object.keys(accepted).length+' supported channels loaded from '+String(e.data.label||e.data.scenario||"routine check")+'. Values are synthetic; prototype guidance is not approved medical advice. Other fields remain in the Uranuß mission-computer record. Snapshot: '+(e.data.at||new Date().toISOString())+'.'));$("uplink").innerHTML='<i class="dot"></i>Uranuß ONBOARD LINK';if(e.data.env)$("missionContext").textContent=String(e.data.env).toUpperCase()+" /  ";window.parent.postMessage({type:"uranus-health-ack",scenario:e.data.scenario||"routine",received:Object.keys(accepted),at:new Date().toISOString()},"*")});
+
+/* 21st.dev "Stat" pattern: signed delta over the sparkline window */
+function dl(m){const a=H[m.k],d=a[a.length-1]-a[0];return(d>=0?"▲ ":"▼ ")+Math.abs(d).toFixed(m.d)}
+/* React Bits SpotlightCard: cursor-following glow (vanilla port) */
+let PM={x:-999,y:-999};function spot(){document.querySelectorAll(".card").forEach(c=>{const b=c.getBoundingClientRect();c.style.setProperty("--mx",PM.x-b.left+"px");c.style.setProperty("--my",PM.y-b.top+"px")})}
+addEventListener("pointermove",e=>{PM={x:e.clientX,y:e.clientY};spot()},{passive:true});
+/* Detailed telemetry export (opened from the left menu) */
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function csvq(v){v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function snapshot(){return{missionDay:47,scenario:srcLabel||SN[scn],systemStatus:L[Math.max(...M.map(sv))],timestamp:new Date().toISOString(),
+readings:M.map(m=>({channel:m.k,name:m.n,value:+R[m.k].toFixed(m.d),unit:m.u,status:L[sv(m)],range:m.r,source:m.t?"test":"sensor"})),
+advisories:M.filter(m=>sv(m)>0).map(m=>({channel:m.n,level:L[sv(m)],action:m.g[sv(m)-1]}))}}
+/* ---- Telemetry history + range export (current snapshot, 1 h, 6 h, 24 h) ---- */
+const XR=[["now","Current",0,0],["1h","Last 1 hour",36e5,6e4],["6h","Last 6 hours",216e5,3e5],["24h","Last 24 hours",864e5,3e5]];
+const HK="uranus-health-history-v1",SM=M.filter(m=>!m.t);let HS=[],xc=null;
+try{HS=JSON.parse(localStorage.getItem(HK)||"[]");if(!Array.isArray(HS))HS=[]}catch(_){HS=[]}
+function hrec(src,force){const now=Date.now(),last=HS[HS.length-1];if(!force&&last&&now-last.t<2e4)return;const v={};SM.forEach(m=>{v[m.k]=+R[m.k].toFixed(3)});HS.push({t:now,s:src,v});HS=HS.filter(p=>p.t>=now-864e5-36e5).slice(-2200);try{localStorage.setItem(HK,JSON.stringify(HS))}catch(_){}}
+function rnd(a){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}
+/* deterministic nominal back-fill for time that has no recorded sample */
+function synth(k,t){const h=(t/36e5)%24,w=2*Math.PI/24,ci=M.findIndex(x=>x.k===k),r=(rnd(Math.floor(t/3e5)*131+ci*7919)-.5)*2;
+if(k==="hr")return 72+6*Math.sin((h-9)*w)+r*3;
+if(k==="spo2")return Math.min(100,97.6+.4*Math.sin((h-9)*w)+r*.7);
+if(k==="temp")return 36.7+.25*Math.sin((h-11)*w)+r*.08;
+if(k==="sleep")return 7.4+(rnd(Math.floor(t/864e5)*17+3)-.5)*.4;
+if(k==="stress")return 28+4*Math.sin((h-8)*w)+r*2.5;
+if(k==="co2")return 2200+300*Math.sin((h-20)*w)+r*90;
+if(k==="rad")return 520+r*14;
+if(k==="resp")return 15+.8*Math.sin((h-9)*w)+r*.8;
+if(k==="glu")return 90+14*Math.max(0,Math.sin((h-8)*w*3))+r*4;
+if(k==="usg")return 1.012+.003*Math.sin((h-10)*w)+r*.001;
+return M[ci].b}
+function iso(t){return new Date(t).toISOString().slice(0,19)+"Z"}
+function series(key){const g=XR.find(x=>x[0]===key),W=g[2],res=g[3],n=Math.round(W/res);hrec("live");
+const end=Date.now(),first=Math.floor(end/res)*res-(n-1)*res,b={};
+HS.forEach(p=>{const i=Math.floor((p.t-first)/res);if(i>=0&&i<n&&(!b[i]||b[i].s!=="uranus"||p.s==="uranus"))b[i]=p});
+const times=[],src=[],ch={};SM.forEach(m=>{ch[m.k]=[]});
+for(let i=0;i<n;i++){const t=first+i*res,p=b[i];times.push(t);src.push(p?(p.s==="uranus"?"uranus_ingest":"live"):"simulated_baseline");
+SM.forEach(m=>{const v=p&&p.v[m.k]!==undefined?p.v[m.k]:synth(m.k,t+res/2),dd=m.k==="co2"||m.k==="rad"?0:m.d+1;ch[m.k].push(+v.toFixed(dd))})}
+const sum=SM.map(m=>{const a=ch[m.k],mn=Math.min(...a),mx=Math.max(...a),av=a.reduce((x,y)=>x+y,0)/a.length,w=Math.max(...a.map(v=>m.sv(v)));return{k:m.k,name:m.n,unit:m.u,min:mn,max:mx,avg:+av.toFixed(m.k==="co2"||m.k==="rad"?0:m.d+1),latest:a[a.length-1],worst:w,status:L[w],range:m.r}});
+return{key,label:g[1],res,n,from:times[0],to:times[n-1]+res,times,src,ch,sum}}
+function xd(){const k=xr+"|"+snap.timestamp;if(!xc||xc.k!==k)xc={k,d:series(xr)};return xc.d}
+function xruns(d,m){const out=[];let st=-1,pk=0;for(let i=0;i<=d.n;i++){const lv=i<d.n?m.sv(d.ch[m.k][i]):0;if(lv>0){if(st<0){st=i;pk=0}pk=Math.max(pk,lv)}else if(st>=0){out.push([st,i-1,pk]);st=-1}}return out}
+function xhm(d,t){return iso(t).slice(d.res*d.n>864e5-1?5:11,16).replace("T"," ")}
+function rangeText(d){const s=snap,pad=(a,n)=>String(a).padEnd(n),lp=(a,n)=>String(a).padStart(n);
+if(xf==="csv")return["timestamp,source,"+SM.map(m=>csvq(m.n+" ("+m.u+")")).join(",")].concat(d.times.map((t,i)=>[iso(t),d.src[i]].concat(SM.map(m=>d.ch[m.k][i])).map(csvq).join(","))).join("\n");
+if(xf==="txt"){const cnt={};d.src.forEach(x=>{cnt[x]=(cnt[x]||0)+1});
+const ev=[];SM.forEach(m=>{xruns(d,m).forEach(r=>ev.push("- "+m.n+" · "+L[r[2]]+" · "+xhm(d,d.times[r[0]])+(r[1]>r[0]?" to "+xhm(d,d.times[r[1]]):"")+" UTC"))});
+return["HEALTH MONITOR · TELEMETRY REPORT","Mission day "+s.missionDay+" · ISS Expedition 47","Scenario: "+s.scenario+" · System: "+s.systemStatus,"Window: "+d.label+" · "+iso(d.from).slice(0,16).replace("T"," ")+" to "+iso(d.to).slice(0,16).replace("T"," ")+" UTC · "+d.n+" samples at "+(d.res/6e4)+" min","Samples: "+Object.keys(cnt).map(k=>k+" "+cnt[k]).join(" · "),"Simulated data, not for clinical use. simulated_baseline samples are synthetic back-fill.","",pad("CHANNEL",20)+lp("AVG",9)+lp("MIN",9)+lp("MAX",9)+lp("LATEST",9)+"  PEAK"].concat(d.sum.map(x=>pad(x.name,20)+lp(x.avg,9)+lp(x.min,9)+lp(x.max,9)+lp(x.latest,9)+"  "+x.status)).concat(["","EVENTS"],ev.length?ev.slice(0,24):["No attention or critical readings in this window."],ev.length>24?["... +"+(ev.length-24)+" more"]:[],["","Reaction, memory and breath-hold tests are event based and appear in the current snapshot only."]).join("\n")}
+const o={scenario:s.scenario,generated:s.timestamp,window:{label:d.label,from:iso(d.from),to:iso(d.to),resolution_seconds:d.res/1e3,samples:d.n},note:"Simulated telemetry, not for clinical use. Samples marked simulated_baseline are synthetic back-fill; live and uranus_ingest samples were recorded by this console.",
+summary:d.sum.map(x=>({channel:x.k,name:x.name,unit:x.unit,min:x.min,avg:x.avg,max:x.max,latest:x.latest,peak_status:x.status})),series:{timestamps:d.times.map(iso),source:d.src}};
+SM.forEach(m=>{o.series[m.k]={unit:m.u,values:d.ch[m.k]}});return JSON.stringify(o,null,2)}
+function exportText(){const s=snap;if(xr!=="now")return rangeText(xd());
+if(xf==="csv")return["channel,value,unit,status,optimal_range,source"].concat(s.readings.map(r=>[r.name,r.value,r.unit,r.status,r.range,r.source].map(csvq).join(","))).join("\n");
+if(xf==="txt")return["HEALTH MONITOR · TELEMETRY REPORT","Mission day "+s.missionDay+" · ISS Expedition 47","Scenario: "+s.scenario+" · System: "+s.systemStatus,"Snapshot: "+s.timestamp,"Simulated data, not for clinical use.",""].concat(s.readings.map(r=>r.name.padEnd(18)+String(r.value).padStart(8)+" "+r.unit.padEnd(6)+r.status)).concat(s.advisories.length?["","ADVISORIES"].concat(s.advisories.map(a=>"- "+a.channel+" ("+a.level+"): "+a.action)):[]).join("\n");
+return JSON.stringify(s,null,2)}
+function xprev(){const t=exportText(),l=t.split("\n");return l.length>60?l.slice(0,60).join("\n")+"\n... +"+(l.length-60)+" more lines. Use Copy or Download for the full export.":t}
+function xdown(){const ext={json:"json",csv:"csv",txt:"txt"}[xf],mt={json:"application/json",csv:"text/csv",txt:"text/plain"}[xf];
+try{const b=new Blob([exportText()],{type:mt+";charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="health-monitor-"+(xr==="now"?"snapshot":xr)+"-"+snap.timestamp.slice(0,19).replace(/[:T]/g,"-")+"."+ext;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);const c=$("xdl");if(c)c.textContent="Downloaded"}catch(_){const c=$("xdl");if(c)c.textContent="Download blocked, use Copy"}}
+function exportView(){const s=snap,rm=xr!=="now",d=rm?xd():null,lv={Nominal:0,Attention:1,Critical:2};let rows,na,nc,nch,meta,th,h3;
+if(rm){nch=d.sum.length;na=d.sum.filter(x=>x.worst===1).length;nc=d.sum.filter(x=>x.worst===2).length;h3="WINDOW SUMMARY";th=["Channel","Average","Peak status","Min – Max"];
+rows=d.sum.map(x=>'<tr class="st'+x.worst+'"><td>'+esc(x.name)+'</td><td class="n">'+x.avg.toLocaleString("en-US")+" <small>"+esc(x.unit)+'</small></td><td><span class="pl">'+x.status+'</span></td><td class="rg">'+x.min.toLocaleString("en-US")+" – "+x.max.toLocaleString("en-US")+"</td></tr>").join("");
+meta=iso(d.from).slice(0,16).replace("T"," ")+" → "+iso(d.to).slice(0,16).replace("T"," ")+" UTC · "+d.n+" samples at "+d.res/6e4+" min · "+esc(s.scenario)+" scenario"}
+else{nch=s.readings.length;na=s.readings.filter(r=>r.status==="Attention").length;nc=s.readings.filter(r=>r.status==="Critical").length;h3="SNAPSHOT";th=["Channel","Value","Status","Optimal range"];
+rows=s.readings.map(r=>'<tr class="st'+lv[r.status]+'"><td>'+esc(r.name)+'</td><td class="n">'+r.value.toLocaleString("en-US")+" <small>"+esc(r.unit)+'</small></td><td><span class="pl">'+r.status+'</span></td><td class="rg">'+esc(r.range)+"</td></tr>").join("");
+meta=s.timestamp.slice(0,19).replace("T"," ")+" UTC · "+esc(s.scenario)+" scenario · Mission day "+s.missionDay+" · System "+s.systemStatus.toLowerCase()}
+const fm=[["json","JSON"],["csv","CSV"],["txt","Report"]].map(a=>'<button class="btn'+(xf===a[0]?" on":"")+'" data-xf="'+a[0]+'" aria-pressed="'+(xf===a[0])+'">'+a[1]+"</button>").join("");
+const rg=XR.map(a=>'<button class="btn'+(xr===a[0]?" on":"")+'" data-xr="'+a[0]+'" aria-pressed="'+(xr===a[0])+'">'+a[1]+"</button>").join("");
+return '<div class="eb">EXPORT</div><h2>Telemetry export</h2><p class="xm">'+meta+"</p>"
++'<div class="xs"><div><b>'+nch+"</b><span>CHANNELS</span></div><div><b>"+na+"</b><span>ATTENTION</span></div><div><b>"+nc+"</b><span>CRITICAL</span></div></div>"
++'<h3>RANGE</h3><div class="xf">'+rg+"</div>"
++"<h3>"+h3+'</h3><div class="xw"><table class="xt"><thead><tr>'+th.map(x=>"<th>"+x+"</th>").join("")+"</tr></thead><tbody>"+rows+"</tbody></table></div>"
++'<h3>FORMAT</h3><div class="xf">'+fm+'</div><pre id="xp">'+esc(xprev())+"</pre>"
++'<div class="xa"><button class="btn on" id="xcp">Copy to clipboard</button><button class="btn" id="xdl">Download</button><button class="btn" id="xrf">Retake snapshot</button></div><p class="xn">Simulated telemetry. Back-filled samples are synthetic and marked simulated_baseline. If the download is blocked in this view, copy the data instead.</p>'}
+setInterval(()=>hrec("live"),3e4);hrec("live");
+
+/* Animated shader background (vanilla WebGL2 port of the AnoAI component) */
+(()=>{const c=$("au"),gl=c.getContext("webgl2",{alpha:false,antialias:false});if(!gl)return;
+const V=`#version 300 es
+in vec2 aPosition;void main(){gl_Position=vec4(aPosition,0.0,1.0);}`;
+const F=`#version 300 es
+precision highp float;
+uniform float iTime;uniform vec2 iResolution;
+out vec4 outColor;
+#define NUM_OCTAVES 3
+float rand(vec2 n){return fract(sin(dot(n,vec2(12.9898,4.1414)))*43758.5453);}
+float noise(vec2 p){vec2 ip=floor(p);vec2 u=fract(p);u=u*u*(3.0-2.0*u);
+float res=mix(mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);return res*res;}
+float fbm(vec2 x){float v=0.0;float a=0.3;vec2 shift=vec2(100.0);mat2 rot=mat2(cos(0.5),sin(0.5),-sin(0.5),cos(0.5));
+for(int i=0;i<NUM_OCTAVES;++i){v+=a*noise(x);x=rot*x*2.0+shift;a*=0.4;}return v;}
+void main(){
+vec2 shake=vec2(sin(iTime*1.2)*0.005,cos(iTime*2.1)*0.005);
+vec2 p=((gl_FragCoord.xy+shake*iResolution.xy)-iResolution.xy*0.5)/iResolution.y*mat2(6.0,-4.0,4.0,6.0)*0.6;
+vec2 v;vec4 o=vec4(0.0);
+float f=2.0+fbm(p+vec2(iTime*5.0,0.0))*0.5;
+for(float i=0.0;i<35.0;i++){
+v=p+cos(i*i+(iTime+p.x*0.08)*0.025+i*vec2(13.0,11.0))*3.5+vec2(sin(iTime*3.0+i)*0.003,cos(iTime*3.5-i)*0.003);
+float tailNoise=fbm(v+vec2(iTime*0.5,i))*0.3*(1.0-(i/35.0));
+vec4 auroraColors=vec4(0.1+0.3*sin(i*0.2+iTime*0.4),0.3+0.5*cos(i*0.3+iTime*0.5),0.7+0.3*sin(i*0.4+iTime*0.3),1.0);
+vec4 currentContribution=auroraColors*exp(sin(i*i+iTime*0.8))/length(max(v,vec2(v.x*f*0.015,v.y*1.5)));
+float thinnessFactor=smoothstep(0.0,1.0,i/35.0)*0.6;
+o+=currentContribution*(1.0+tailNoise*0.8)*thinnessFactor;}
+o=tanh(pow(o/40.0,vec4(1.3)));
+outColor=vec4(clamp(o.rgb*2.4,0.0,1.0),1.0);}`;
+const sh=(k,t)=>{const o=gl.createShader(k);gl.shaderSource(o,t);gl.compileShader(o);return o},p=gl.createProgram();
+gl.attachShader(p,sh(gl.VERTEX_SHADER,V));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,F));gl.bindAttribLocation(p,0,"aPosition");gl.linkProgram(p);
+if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.warn("shader background unavailable");return}
+gl.useProgram(p);gl.bindVertexArray(gl.createVertexArray());gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+const uT=gl.getUniformLocation(p,"iTime"),uR=gl.getUniformLocation(p,"iResolution"),rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let t=6,last=0;
+function frame(n){const dt=Math.min(.05,(n-last)/1e3||.016);last=n;if(!rm)t+=dt;
+const w=c.clientWidth,h=c.clientHeight,d=Math.min(devicePixelRatio||1,1.5);
+if(c.width!==Math.round(w*d)||c.height!==Math.round(h*d)){c.width=Math.round(w*d);c.height=Math.round(h*d)}
+gl.viewport(0,0,c.width,c.height);gl.uniform1f(uT,t);gl.uniform2f(uR,c.width,c.height);gl.drawArrays(gl.TRIANGLES,0,3);
+if(!rm)requestAnimationFrame(frame)}
+requestAnimationFrame(frame)})();
+render();
+</script>
+</body></html>

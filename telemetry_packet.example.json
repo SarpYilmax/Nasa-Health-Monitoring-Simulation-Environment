@@ -1,0 +1,34 @@
+{
+  "type": "uranus-health-data",
+  "packetId": "URN-EXAMPLE-001",
+  "scenario": "radiation",
+  "label": "High-radiation zone",
+  "env": "mars",
+  "at": "2026-11-14T17:00:00Z",
+  "source": {
+    "type": "synthetic_simulator",
+    "deviceId": "URANUS-WEARABLE-DEMO"
+  },
+  "units": {
+    "hr": "bpm",
+    "spo2": "%",
+    "temp": "Cel",
+    "sleep": "h",
+    "co2": "ppm",
+    "rad": "demo_units",
+    "resp": "/min",
+    "glu": "mg/dL",
+    "usg": "SG"
+  },
+  "values": {
+    "hr": 74,
+    "spo2": 98,
+    "temp": 36.8,
+    "sleep": 7.4,
+    "co2": 2800,
+    "rad": 2700,
+    "resp": 15,
+    "glu": 88,
+    "usg": 1.012
+  }
+}

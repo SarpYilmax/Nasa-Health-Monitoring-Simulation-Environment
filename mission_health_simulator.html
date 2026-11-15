@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Health Monitoring Simulator</title>
+<style>
+:root{--bg:#07111f;--panel:#101e30;--line:#263e59;--text:#edf5ff;--muted:#a7bad0;--cyan:#69d8e8;--green:#67dda7;--amber:#f3c86f;--red:#ff7e83}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#173652 0,transparent 55%),var(--bg);color:var(--text);font:15px/1.45 system-ui,Segoe UI,sans-serif}main{max-width:1250px;margin:auto;padding:26px 22px 55px}.top{display:flex;justify-content:space-between;gap:20px}.eyebrow{color:var(--cyan);font-size:12px;letter-spacing:.16em;font-weight:800}h1{font-size:clamp(27px,4vw,40px);letter-spacing:-.04em;margin:7px 0}.sub{color:var(--muted);margin:0}.tag{border:1px solid #725c31;color:var(--amber);background:#2a2418;padding:8px 12px;border-radius:999px;font-weight:800;font-size:12px;height:max-content;white-space:nowrap}.notice{margin:18px 0;padding:11px 14px;border:1px solid #695b36;background:#211f1a;border-radius:12px;color:#e8d7a9;font-size:13px}.controls{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}.btn{border:1px solid var(--line);background:#14253a;color:var(--text);padding:10px 13px;border-radius:10px;font-weight:700;cursor:pointer}.btn:hover{border-color:var(--cyan)}.btn.primary{background:#c6f6fb;color:#06202b;border:0}.btn.urgent{background:#421f27;border-color:#a64855;color:#ffd8da}.btn:disabled{opacity:.4;cursor:not-allowed}.pill{font-size:10px;border:1px solid #40536a;padding:3px 8px;border-radius:999px;color:var(--muted);align-self:center}.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,.8fr);gap:15px}.panel{background:linear-gradient(150deg,#122238,#0d1929);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 40px #0002}.panel h2{font-size:17px;margin:0 0 12px}.network{display:grid;grid-template-columns:minmax(0,1fr) 48px minmax(0,1fr);gap:8px;align-items:stretch}.node{background:#0a1727;border:1px solid #31506e;border-radius:13px;padding:13px;min-height:246px}.node .icon{font-size:23px}.node h3{font-size:14px;margin:6px 0 3px}.node p{font-size:11px;color:var(--muted);margin:0}.status{display:flex;align-items:center;gap:6px;margin:9px 0;font-size:10px;font-weight:800;color:var(--green)}.dot{width:7px;height:7px;border-radius:50%;background:currentColor}.offline{color:var(--red)!important}.wire{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px}.wireline{height:2px;width:100%;background:var(--green);position:relative}.wireline:after{content:'›';position:absolute;right:0;top:-12px;color:var(--green);font-size:22px}.wire.off .wireline{background:repeating-linear-gradient(90deg,var(--red) 0 5px,transparent 5px 10px)}.wire.off .wireline:after{content:'×';color:var(--red)}.wire button{font-size:9px;border:1px solid var(--line);background:#0b192a;color:var(--muted);padding:5px;border-radius:7px;cursor:pointer}.ledger{border-top:1px solid #23374d;margin-top:9px;padding-top:8px}.ledger-title{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.records{display:grid;gap:5px;margin-top:5px}.rec{font-size:10px;padding:6px 7px;border-radius:7px;background:#112337;border:1px solid #253b53;color:#d6e5f3}.rec.high{border-color:#85424a;background:#2a1921;color:#ffdadd}.rec.priority{border-color:#79602b;background:#282315;color:#ffebba}.rec .meta{display:block;color:#a7bad0;font-size:9px;margin-top:2px}.empty{font-size:10px;color:#8298af;padding:6px 0}.mobilewire{display:none}.data-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.metric{padding:9px;background:#0a1727;border:1px solid #233952;border-radius:10px}.metric span{display:block;color:var(--muted);font-size:10px}.metric b{font-size:20px}.metric small{color:var(--muted);font-size:10px}.side{display:grid;gap:13px;align-content:start}.queue{display:grid;grid-template-columns:1fr 1fr;gap:9px}.queuebox{background:#0a1727;border:1px solid #233952;padding:9px;border-radius:10px}.queuebox b{font-size:12px}.queuebox div{font-size:10px;color:var(--muted)}.steps .step{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #23374d}.num{flex:none;width:23px;height:23px;display:grid;place-items:center;border-radius:7px;background:#1a324b;color:var(--cyan);font-size:11px;font-weight:800}.step b{font-size:12px}.step p{font-size:11px;margin:2px 0 0;color:var(--muted)}.result{border-left:3px solid var(--amber);padding:9px 10px;background:#201f1a;color:#ead9ad;border-radius:0 8px 8px 0;font-size:12px}.result.ok{border-color:var(--green);background:#10251f;color:#c0ebd4}.result.critical{border-color:var(--red);background:#301920;color:#ffdadd}.result strong{display:block;margin-bottom:3px}.actions{display:grid;gap:7px}.log{max-height:180px;overflow:auto;display:flex;flex-direction:column-reverse;gap:5px}.event{font-size:10px;color:#c9d8e8;padding:6px 8px;border:1px solid #20344a;background:#0a1727;border-radius:8px}.event time{color:var(--cyan);margin-right:6px}.foot{color:var(--muted);font-size:10px;margin-top:9px}.safety{font-size:10px;color:#a7bad0;margin-top:9px}@media(max-width:940px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}}@media(max-width:650px){main{padding:18px 12px 40px}.top{display:block}.tag{display:inline-block;margin-top:12px}.network{grid-template-columns:1fr;gap:7px}.node{min-height:unset}.wire{display:none}.mobilewire{display:flex;justify-content:center;height:25px;align-items:center;color:var(--green);font-size:11px}.mobilewire.off{color:var(--red)}.side{grid-template-columns:1fr}.data-row{grid-template-columns:1fr 1fr}.controls .btn{flex:1}}
+</style>
+<style>
+/* Readability pass */
+:root{--muted:#bdcddd}body{font-size:16px;line-height:1.55}main{max-width:1340px;padding:30px 24px 60px}.sub{font-size:16px}.notice{font-size:14px;padding:14px 16px}.btn{font-size:14px;padding:11px 14px}.pill{font-size:11px;padding:4px 9px}.panel{padding:19px}.panel h2{font-size:19px}.node{padding:14px;min-height:260px}.node h3{font-size:16px}.node p{font-size:13px;line-height:1.45}.status{font-size:12px}.ledger-title{font-size:11px;color:#c4d2e2}.rec{font-size:12px;padding:7px 8px}.rec .meta{font-size:11px;color:#bdcddd}.empty{font-size:12px}.metric{padding:11px}.metric span,.metric small{font-size:12px}.queuebox{padding:11px}.queuebox b{font-size:13px}.queuebox div,.safety{font-size:12px}.step b{font-size:14px}.step p{font-size:13px}.result{font-size:14px;padding:11px 12px}.event{font-size:12px;padding:8px 9px}.foot{font-size:12px}
+.scenario-info{margin:-4px 0 14px;padding:10px 13px;background:#102139;border:1px solid #2b4763;border-radius:10px;color:#d3e3f3;font-size:13px}.hazards{margin:20px 0 17px;padding:20px;background:linear-gradient(145deg,#11243a,#0d1929);border:1px solid #31506e;border-radius:16px}.hazards h2{font-size:21px;margin:0 0 4px}.hazards-intro{color:var(--muted);font-size:14px;margin:0 0 14px}.hazard-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.hazard{background:#0a1727;border:1px solid #2b435d;border-radius:12px;padding:13px;min-height:165px}.hazard .n{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:.08em}.hazard h3{font-size:15px;line-height:1.3;margin:6px 0 8px}.hazard p{font-size:13px;line-height:1.48;color:#d0dce9;margin:0}.hazard b{color:#fff}.hazard a{display:inline-block;color:#8fdbec;font-size:12px;font-weight:700;margin-top:8px}.hazard a:focus{outline:2px solid white;outline-offset:2px}@media(max-width:1000px){.hazard-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.hazards{padding:15px}.hazard-grid{grid-template-columns:1fr}.hazard{min-height:unset}}
+</style><style>
+.appnav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.navbtn{background:#11253a;border:1px solid #35516d;color:#dce9f7;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:750;cursor:pointer}.navbtn.active{background:#b9f0f5;color:#06232c;border-color:#b9f0f5}.navbtn:disabled{opacity:.45;cursor:not-allowed}.console-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:16px 0 10px;padding:13px 16px;border:1px solid #31506e;background:#102139;border-radius:13px}.console-head b,.console-head span{display:block}.console-head span{color:#bdcddd;font-size:13px;margin-top:3px}.connected-pill{color:#91f0bd!important;font-weight:800;white-space:nowrap}#dashboardFrame{display:block;width:100%;height:calc(100vh - 170px);min-height:1050px;border:0;border-radius:0;background:#0a1424}#consoleView[hidden],#missionView[hidden]{display:none!important}@media(max-width:740px){.top{display:block}.appnav{margin-top:12px}.console-head{align-items:flex-start;flex-direction:column}#dashboardFrame{height:1400px;min-height:1400px}}
+</style><style id="uranusPalette">
+/* uranuß · dark electric-blue / orange theme (replaces the light palette layer) */
+:root{--bg:#000;--panel:#0a1020;--line:rgba(77,120,255,.22);--text:#e8edf8;--muted:#9aa7c4;--cyan:#4da3ff;--green:#2fd6a0;--amber:#f2b84b;--red:#ff6b6b;--blue:#2f7bff;--orange:#ff9a4d;--display:"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;--mono:"Cascadia Mono","JetBrains Mono",Consolas,ui-monospace,monospace;color-scheme:dark}
+*{scrollbar-color:#2b4d86 transparent}
+html{background:#000}
+#velaris{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none;background:radial-gradient(70% 55% at 50% 0%,rgba(31,95,224,.45),rgba(0,0,0,0) 70%),#000}
+body>.veil{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,rgba(0,0,0,0) 30%,rgba(0,0,0,.55) 100%),linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.5))}
+body{background:none;color:var(--text);font:16px/1.55 "Segoe UI Variable Text","Segoe UI",Inter,system-ui,sans-serif;min-height:100vh}
+main{max-width:1340px;padding:18px 24px 64px}
+
+/* header */
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 32px;align-items:end;padding:52px 4px 30px;margin:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible}
+.top>div:first-child{position:static}
+.eyebrow{font:500 12px/1.4 var(--mono);letter-spacing:.03em;color:var(--cyan)}
+.eyebrow:before{content:"";display:inline-block;width:7px;height:7px;margin-right:9px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px rgba(255,154,77,.8)}
+.top h1{font:400 clamp(46px,7.2vw,92px)/.98 var(--display);letter-spacing:-.025em;margin:14px 0 12px;color:#fff;text-shadow:0 0 60px rgba(47,123,255,.55)}
+.top{position:relative;margin-bottom:20px}
+.top:after{content:"";position:absolute;left:4px;right:4px;bottom:0;height:1px;background:linear-gradient(90deg,rgba(77,163,255,.7),rgba(77,163,255,.12) 55%,rgba(255,154,77,.4))}
+.top .sub{font:400 14px/1.6 var(--mono);color:var(--muted);max-width:60ch;margin:0}
+.appnav{position:static;align-self:end;justify-content:flex-end}
+.navbtn{background:rgba(255,255,255,.05);border:1px solid rgba(150,190,255,.3);color:var(--text);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:650;backdrop-filter:blur(8px)}
+.navbtn:hover:not(:disabled){border-color:rgba(255,255,255,.6)}
+.navbtn.active{background:#fff;color:#06142e;border-color:#fff}
+.navbtn:disabled{opacity:.4}
+.tag{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:#dbe6f5;padding:9px 14px;border-radius:999px;font:600 12px/1 var(--mono);letter-spacing:.04em}
+
+/* notice + controls */
+.notice{margin:0 0 18px;padding:13px 18px;background:rgba(242,184,75,.08);border:1px solid rgba(242,184,75,.28);border-radius:14px;color:#f1deb4;font-size:14px;backdrop-filter:blur(12px)}
+.notice b{color:var(--amber)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 12px}
+.btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.22);color:var(--text);padding:11px 16px;border-radius:999px;font-size:14px;font-weight:650;cursor:pointer;transition:border-color .15s,background .15s}
+.btn:hover:not(:disabled){border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.1)}
+.btn.primary{background:#fff;border:1px solid #fff;color:#000}
+.btn.primary:hover:not(:disabled){background:#e8eef7}
+.btn.urgent{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.55);color:#fff}
+.btn.urgent:hover:not(:disabled){background:rgba(255,255,255,.2)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.pill{background:rgba(255,255,255,.05);border:1px solid rgba(150,190,255,.26);color:var(--muted);border-radius:999px;padding:6px 8px 6px 13px;font:500 12px/1.2 var(--mono);backdrop-filter:blur(8px)}
+select{font:inherit;color:var(--text);background:#0a1a38;border:1px solid rgba(150,190,255,.35);border-radius:999px;padding:6px 10px;max-width:100%}
+select:focus-visible,.btn:focus-visible,.navbtn:focus-visible,.wire button:focus-visible,.hazard a:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.scenario-info{margin:0 0 20px;padding:12px 16px;background:rgba(10,26,56,.62);border:1px solid var(--line);border-radius:14px;color:#d3e3fb;font-size:14px;backdrop-filter:blur(10px)}
+
+/* panels */
+.hazards,.panel,.console-head{background:linear-gradient(165deg,rgba(15,24,48,.66),rgba(6,10,22,.82));border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 70px -30px rgba(0,0,0,.95),0 0 0 1px rgba(0,0,0,.4);backdrop-filter:blur(18px) saturate(140%)}
+.hazards{margin:20px 0 18px;padding:24px;border-radius:24px}
+.panel{padding:20px;border-radius:22px}
+.hazards h2,.panel h2{font:400 clamp(22px,2.4vw,28px)/1.15 var(--display);letter-spacing:-.01em;color:#fff;margin:0 0 14px}
+.hazards-intro{color:var(--muted);font-size:14px;max-width:80ch}
+.hazard-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.hazard{background:rgba(4,8,18,.6);border:1px solid rgba(77,120,255,.2);border-radius:16px;padding:16px;min-height:170px}
+.hazard .n{font:600 11px/1.3 var(--mono);letter-spacing:.04em;color:var(--orange)}
+.hazard h3{font:400 20px/1.2 var(--display);color:#fff;margin:8px 0 8px}
+.hazard p{color:#c9d9ef;font-size:13px}
+.hazard b{color:#fff}
+.hazard a{color:#7cc0ff;font-weight:600}
+
+/* flow nodes */
+.network{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);gap:10px;align-items:stretch}
+.node{background:rgba(4,8,18,.66);border:1px solid var(--line);border-radius:18px;padding:15px;min-height:260px}
+.network>.node:first-of-type{border-color:rgba(77,163,255,.45);box-shadow:0 0 44px -18px rgba(47,123,255,.9),inset 0 0 46px -36px rgba(47,123,255,1)}
+.network>.node:last-of-type{border-color:rgba(255,154,77,.4);box-shadow:0 0 44px -20px rgba(255,154,77,.6),inset 0 0 46px -38px rgba(255,154,77,.9)}
+.node h3{font:400 21px/1.2 var(--display);color:#fff}
+.node p{color:var(--muted)}
+.status{color:var(--green)}
+.wireline{height:3px;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--orange));box-shadow:0 0 14px rgba(255,154,77,.45)}
+.wireline:after{color:var(--orange)}
+.wireline:before{content:"";position:absolute;left:0;top:-2px;width:24px;height:7px;border-radius:4px;background:#fff;filter:blur(3px);animation:flow 2.4s linear infinite}
+.wire.off .wireline{background:repeating-linear-gradient(90deg,var(--red) 0 5px,transparent 5px 10px);box-shadow:none}
+.wire.off .wireline:before{display:none}
+.wire.off .wireline:after{color:var(--red)}
+@keyframes flow{from{left:0}to{left:calc(100% - 24px)}}
+.wire button{background:rgba(255,255,255,.05);border:1px solid rgba(150,190,255,.3);color:var(--muted);border-radius:9px}
+.mobilewire{color:var(--cyan)}.mobilewire.off{color:var(--red)}
+
+/* logs and records */
+.ledger{border-top:1px solid rgba(88,154,255,.2)}
+.ledger-title{font:500 12px/1.3 var(--mono);letter-spacing:.02em;text-transform:none;color:var(--muted)}
+.ledger-title:before{content:"";display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;background:var(--cyan);vertical-align:middle}
+.rec{background:rgba(31,123,255,.1);border:1px solid rgba(74,168,255,.3);color:#dbe9ff;border-radius:11px;font-size:12px;padding:8px 10px}
+.rec.high{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.5);color:#ffe1e1}
+.rec.priority{background:rgba(242,184,75,.12);border-color:rgba(242,184,75,.5);color:#f6e6bf}
+.rec .meta{color:#b9cbe6}
+.empty{color:#8ea6c8}
+.metric{background:rgba(3,10,24,.62);border:1px solid rgba(88,154,255,.22);border-radius:14px;padding:12px}
+.metric span,.metric small{color:var(--muted)}
+.metric b{font:400 32px/1.1 var(--display);font-variant-numeric:tabular-nums;color:#fff}
+.queuebox{background:rgba(3,10,24,.62);border:1px solid rgba(88,154,255,.22);border-radius:14px}
+.queuebox div,.safety,.foot,.step p{color:var(--muted)}
+.steps .step{border-color:rgba(88,154,255,.18)}
+.num{background:rgba(31,123,255,.2);border:1px solid rgba(74,168,255,.45);color:#9fd0ff;border-radius:9px}
+.result{background:rgba(31,123,255,.1);border-left:3px solid var(--cyan);color:#d6e6ff;border-radius:0 12px 12px 0}
+.result.ok{background:rgba(47,214,160,.1);border-color:var(--green);color:#c8f4e5}
+.result.critical{background:rgba(255,107,107,.14);border-color:var(--red);color:#ffe1e1}
+.result.priority{background:rgba(242,184,75,.12);border-color:var(--amber);color:#f6e6bf}
+.event{background:rgba(3,10,24,.62);border:1px solid rgba(88,154,255,.18);color:#d3e3fb;border-radius:10px}
+.event time{font-family:var(--mono);color:var(--cyan)}
+
+/* console wrapper (the console itself is untouched) */
+.console-head{border-radius:18px}
+.console-head span{color:var(--muted)}
+.connected-pill{color:var(--green)!important;font-family:var(--mono)}
+
+@media(max-width:1000px){.hazard-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:940px){main{padding:14px 18px 48px}.layout{grid-template-columns:1fr}.top{grid-template-columns:1fr}.appnav{justify-content:flex-start}}
+@media(max-width:650px){main{padding:8px 12px 40px}.top{padding:34px 2px 20px}.hazard-grid{grid-template-columns:1fr}.hazard{min-height:unset}.network{grid-template-columns:1fr}.network>.node{min-height:unset}.btn{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){.wireline:before{animation:none;display:none}.btn{transition:none}}
+.simdot{color:#2fd6a0;text-shadow:0 0 8px rgba(47,214,160,.75)}
+.simdot.off{color:#ff6b6b;text-shadow:0 0 8px rgba(255,107,107,.75)}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ctrl{margin:18px 0 20px;padding:18px 20px 16px;border-radius:22px;background:linear-gradient(165deg,rgba(15,24,48,.66),rgba(6,10,22,.82));border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 70px -30px rgba(0,0,0,.95);backdrop-filter:blur(18px) saturate(140%)}
+.ctrl-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.ctrl-title{font:400 22px/1.1 var(--display);color:#fff}
+.ctrl-pills{display:flex;gap:8px;flex-wrap:wrap}
+.ctrl .pill{padding:6px 12px}
+.ctrl .scenario-info{margin:14px 0 0;padding:11px 14px;border-radius:12px;background:rgba(4,8,18,.55);border:1px solid rgba(77,120,255,.2);backdrop-filter:none;font-size:13.5px;color:#cfe0fb}
+.ctrl-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 24px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(88,154,255,.18)}
+.sgrp{display:flex;flex-direction:column;gap:7px}
+.slabel{font:500 11px/1.2 var(--mono);color:var(--muted)}
+.seg{display:inline-flex;padding:3px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04)}
+.segb{border:0;background:transparent;color:#c7d4ea;font-family:inherit;font-size:13px;font-weight:600;line-height:1;padding:8px 14px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
+.segb:hover{color:#fff}.segb.on{background:rgba(255,255,255,.16);color:#fff}
+.cact{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.btn.run{padding:11px 22px}
+.nbtn:focus-visible,.segb:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+@media(max-width:940px){.scn-bars{grid-template-columns:1fr}.cact{margin-left:0;width:100%}}
+@media(max-width:650px){.ctrl{padding:14px}.cact .btn{flex:1 1 45%}.sgrp{width:100%}.seg{display:flex}.segb{flex:1;padding:8px 6px}}
+
+/* scenario control v5: two navigation bars, neutral tones, larger targets */
+.ctrl{padding:28px 30px 26px;margin:22px 0 26px}
+.ctrl-title{font-size:34px}
+.ctrl .pill{font-size:12.5px;padding:8px 14px}
+.scn-bars{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px}
+.scn-col{padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(4,8,18,.5)}
+.scn-vitals{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.045)}
+.scn-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.scn-head h3{margin:0;font:400 25px/1.1 var(--display);color:#fff}
+.scn-head span{font:500 11.5px/1.3 var(--mono);color:var(--muted)}
+.navbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:8px}
+.nbtn{min-height:60px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#e3ebf8;font-family:inherit;font-size:16.5px;font-weight:650;line-height:1.2;text-align:center;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.nbtn:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.1)}
+.nbtn.on{background:#fff;border-color:#fff;color:#05070d}
+.nbtn.normal{grid-column:1/-1;min-height:54px;border-style:dashed}
+.nbtn.normal.on{border-style:solid}
+.scn-active{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin-top:18px;padding:14px 18px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+.scn-active b{font-size:19px;font-weight:650;color:#fff}
+.ctrl .scenario-info{font-size:15px;line-height:1.6;padding:14px 18px}
+.ctrl .scenario-info p{margin:0 0 6px}.ctrl .scenario-info p:last-child{margin:0}.ctrl .scenario-info b{color:#fff}
+.ctrl .seg .segb{font-size:15px;padding:11px 18px}
+.ctrl .slabel{font-size:12px}
+.ctrl .cact .btn{font-size:15px;padding:13px 18px}
+.btn.run{padding:15px 32px!important;font-size:17px!important}
+@media(max-width:940px){.scn-bars{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:650px){.ctrl{padding:16px}.ctrl-title{font-size:27px}.scn-col{padding:14px}.navbar{grid-template-columns:repeat(2,1fr)}.nbtn{font-size:15px;min-height:54px}}
+
+/* collapsible logs */
+summary.ledger-title{list-style:none;cursor:pointer;display:flex;align-items:center;user-select:none}
+summary.ledger-title::-webkit-details-marker{display:none}
+summary.ledger-title:after{content:"";margin-left:auto;width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-135deg) translate(-2px,-2px);transition:transform .18s}
+details.ledger:not([open]) summary.ledger-title:after{transform:rotate(45deg)}
+summary.ledger-title:hover{color:#fff}
+summary.ledger-title:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:4px}
+/* crew vitals monitoring cards (same form as the hazards section) */
+.hazard-grid.v4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1000px){.hazard-grid.v4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.hazard-grid.v4{grid-template-columns:1fr}}
+
+.linksim{margin-top:16px;padding-top:16px;border-top:1px solid rgba(88,154,255,.18)}.linksim h2{margin:0 0 8px}.linksim .foot{margin:0 0 14px}
+
+.hazard-grid.v3{grid-template-columns:repeat(3,1fr)}@media(max-width:650px){.hazard-grid.v3{grid-template-columns:1fr}}
+.layout+.hazards{margin-top:26px}
+
+#testsInfo .hazard .n{color:#a98ae6}
+#hazardsInfo .hazard .n{color:var(--green)}
+
+/* calmer monitoring cards */
+#vitalsInfo .hazard,#hazardsInfo .hazard,#testsInfo .hazard{min-height:0;padding:14px 15px}
+#vitalsInfo h2,#hazardsInfo h2,#testsInfo h2{margin-bottom:4px}
+#vitalsInfo .hazards-intro,#hazardsInfo .hazards-intro,#testsInfo .hazards-intro{margin:0 0 14px;font-size:13px;opacity:.8}
+.hazard .n{opacity:.9}
+.hazard h3{margin:6px 0 4px}
+.hazard p{color:var(--muted);font-size:13.5px}
+.hazard .trig{display:block;margin-top:6px;font:500 11.5px/1.4 var(--mono);color:#dbe6f5;opacity:.75}
+</style></head><body><canvas id="velaris" aria-hidden="true"></canvas><div class="veil" aria-hidden="true"></div><main>
+<header class="top"><div><div class="eyebrow">Uranuß · Health Monitoring Simulation Environment
+</div><h1>Simulation Interface
+</h1><p class="sub">Mission view for astronaut, vehicle computer, and ground team environment</p></div><div class="appnav"><button id="navMission" class="navbtn active">Mission Flow</button><button id="navConsole" class="navbtn" disabled>Health Monitor</button><span class="tag"><span id="simDot" class="simdot">●</span> SIMULATION</span></div></header>
+<div id="missionView">
+<section class="ctrl" aria-label="Scenario control"><div class="ctrl-top"><div class="ctrl-title">Scenario control</div><div class="ctrl-pills"><span class="pill" id="mission">MISSION: DEMO-01</span><span class="pill" id="netLabel">WEARABLE LINK: ONLINE</span></div></div>
+<div class="scn-bars"><div class="scn-col scn-vitals"><div class="scn-head"><h3>Crew vitals feed</h3><span>Biometric state</span></div><div class="navbar" id="vitalsBar" role="group" aria-label="Crew vitals feed scenarios"></div></div>
+<div class="scn-col scn-hazards"><div class="scn-head"><h3>Mission hazards</h3><span>Environment &amp; mission event</span></div><div class="navbar" id="hazardsBar" role="group" aria-label="Mission hazard scenarios"></div></div></div>
+<div class="scn-active" aria-live="polite"><span class="slabel">Scenario to simulate</span><b id="activeCombo">Normal</b></div>
+<div id="scenarioInfo" class="scenario-info" aria-live="polite">Selected scenario data source and system behavior appear here.</div>
+<div class="ctrl-row"><div class="sgrp"><span class="slabel">Mission environment</span><div class="seg" id="envSeg" role="radiogroup" aria-label="Mission environment"></div></div><div class="sgrp"><span class="slabel">Communication latency</span><div class="seg" id="latSeg" role="radiogroup" aria-label="Communication latency"></div></div><div class="cact"><button class="btn" id="measure">Routine sample reading</button><button class="btn" id="dropNext">Drop next packet: off</button><button class="btn" id="reset">↺　Clear flow</button><button class="btn primary run" id="runScenario">Run scenario</button></div></div><div class="sr-only" aria-hidden="true"><select tabindex="-1" id="missionEnv"><option value="iss">ISS</option><option value="moon">Lunar base</option><option value="mars">Mars transit</option></select><select tabindex="-1" id="latency"><option value="0">Instant</option><option value="1" selected>1 sec</option><option value="3">3 sec</option><option value="8">8 sec</option></select></div></section>
+<div class="layout"><section class="panel"><h2>Onboard system · local records at each stage</h2><div class="network">
+<article class="node"><h3>Crew wearable</h3><p>Simulated heart rate, SpO₂, respiration, glucose, hydration, skin temperature, and motion</p><div class="status" id="wearStatus"><i class="dot"></i>Ready · sensor simulator</div><details class="ledger" open><summary class="ledger-title">Wearable log</summary><div class="records" id="deviceRecords"><div class="empty">No records yet</div></div></details></article>
+<div class="wire" id="wireWR"><div class="wireline"></div><button data-link="wr">OFF / ON<br>wearable ↔ vehicle</button></div>
+<article class="node"><h3>Vehicle / mission computer</h3><p>Local storage, priority queue, and fixed alert rules · no AI</p><div class="status" id="rocketStatus"><i class="dot"></i>Standby</div><button class="btn primary" id="openDashboard" disabled style="width:100%;padding:9px 6px;font-size:12px">Open · Health Monitor</button><details class="ledger" open><summary class="ledger-title">Mission computer log</summary><div class="records" id="rocketRecords"><div class="empty">Waiting for wearable data</div></div></details></article>
+</div><div class="mobilewire" id="mwr">↓ wearable ↔ vehicle link online</div>
+<div class="linksim"><h2>Link simulation</h2><div class="foot">Toggle the wearable link, set transfer delay, or simulate loss of the next packet. The onboard computer keeps queued records and retries.</div></div><p class="foot">Local records are stored in this browser and persist after refresh. “Clear flow” deletes them.</p></section>
+<aside class="side"><section class="panel"><h2>Local alert classification</h2><div class="queue"><div class="queuebox"><b style="color:var(--red)">● Alert</b><div id="urgentQueue">0 records</div></div><div class="queuebox"><b style="color:var(--amber)">● Watch</b><div id="missionQueue">0 records</div></div><div class="queuebox"><b style="color:var(--cyan)">● Routine</b><div id="routineQueue">0 records</div></div></div><p class="safety">The computer compares readings with demo-only configured rules and displays a local alert. These are not clinical thresholds and do not diagnose or recommend treatment.</p></section>
+<section class="panel steps"><h2>Onboard flow</h2><div class="step"><div class="num">1</div><div><b>Captured by wearable</b><p id="s1">Waiting for a reading.</p></div></div><div class="step"><div class="num">2</div><div><b>Stored on mission computer</b><p id="s2">Transferred over the wearable link.</p></div></div><div class="step"><div class="num">3</div><div><b>Fixed-rule check</b><p id="s3">Waiting for the reading to arrive.</p></div></div><div class="step"><div class="num">4</div><div><b>Local crew alert</b><p id="s4">Displayed on the onboard console when a demo rule matches.</p></div></div></section>
+
+</aside></div>
+<section class="hazards" id="vitalsInfo"><h2>Priority monitoring · eight crew vitals</h2><p class="hazards-intro">Demo triggers only, not clinical thresholds.</p><div class="hazard-grid v4">
+<article class="hazard"><div class="n">01 · LOW OXYGEN</div><h3>Low blood oxygen</h3><p>Wearable SpO₂ and heart rate.</p><span class="trig">Trigger · SpO₂ &lt; 90 %</span><a href="https://www.nasa.gov/humans-in-space/the-human-body-in-space/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">02 · CO₂ RISE</div><h3>Rising cabin CO₂</h3><p>Habitat sensor, kept apart from biometrics.</p><span class="trig">Trigger · ≥ 5,000 ppm</span><a href="https://www.nasa.gov/ochmo-tb-004-carbon-dioxide-2/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">03 · FAST BREATHING</div><h3>Respiratory rate</h3><p>Breaths per minute at rest.</p><span class="trig">Trigger · ≥ 21 br/min</span><a href="https://www.nasa.gov/humans-in-space/the-human-body-in-space/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">04 · POOR SLEEP</div><h3>Sleep loss</h3><p>Sleep duration from the wrist sensor.</p><span class="trig">Trigger · &lt; 5 h</span><a href="https://humanresearchroadmap.nasa.gov/Risks/risk.aspx?i=100" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">05 · FASTING GLUCOSE</div><h3>Fasting glucose</h3><p>mg/dL before eating.</p><span class="trig">Trigger · &lt; 70 mg/dL</span><a href="https://humanresearchroadmap.nasa.gov/Evidence/other/Nutrition-20150105.pdf" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">06 · POST-MEAL GLUCOSE</div><h3>Post-meal glucose</h3><p>mg/dL about 2 h after a meal.</p><span class="trig">Trigger · ≥ 140 mg/dL</span><a href="https://humanresearchroadmap.nasa.gov/Evidence/other/Nutrition-20150105.pdf" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">07 · LOW GLUCOSE</div><h3>Low glucose</h3><p>Fast drop, often with a raised heart rate.</p><span class="trig">Trigger · &lt; 60 mg/dL</span><a href="https://humanresearchroadmap.nasa.gov/Evidence/other/Nutrition-20150105.pdf" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">08 · DEHYDRATION</div><h3>Hydration</h3><p>Urine specific gravity and fluid intake.</p><span class="trig">Trigger · SG ≥ 1.020</span><a href="https://www.nasa.gov/wp-content/uploads/2024/08/human-adaptation-2021-final-b.pdf" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+</div></section>
+<section class="hazards" id="hazardsInfo"><h2>Priority monitoring · five spaceflight hazards</h2><p class="hazards-intro">NASA Human Research Program hazards.</p><div class="hazard-grid">
+<article class="hazard"><div class="n">01 · SPACE RADIATION</div><h3>Space radiation</h3><p>Dosimeter data by mission phase.</p><a href="https://www.nasa.gov/hrp/hazard-space-radiation/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">02 · ISOLATION</div><h3>Isolation and confinement</h3><p>Sleep, activity, workload and mood trends.</p><a href="https://www.nasa.gov/hrp/hazard-isolation-and-confinement/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">03 · DISTANCE</div><h3>Distance from Earth</h3><p>Link status, latency and transfer queue.</p><a href="https://www.nasa.gov/hrp/hazards/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">04 · GRAVITY</div><h3>Gravity fields</h3><p>Mission phase, gravity context and balance checks.</p><a href="https://www.nasa.gov/humans-in-space/the-human-body-in-space/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">05 · HABITAT</div><h3>Hostile / closed environment</h3><p>Habitat temperature, pressure, light and noise.</p><a href="https://www.nasa.gov/hrp/hazard-hostile-closed-environments/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+</div></section>
+<section class="hazards" id="testsInfo"><h2>Priority monitoring · three health function tests</h2><p class="hazards-intro">Demo triggers only, not clinical thresholds.</p><div class="hazard-grid v3">
+<article class="hazard"><div class="n">01 · PSYCHOMOTOR VIGILANCE</div><h3>Reaction time</h3><p>Attention and fatigue.</p><span class="trig">Trigger · &gt; 300 ms</span><a href="https://www.nasa.gov/aeronautics/nasa-research-app-helps-fight-fatigue-in-flight-space-and-more/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">02 · WORKING MEMORY</div><h3>Sequence memory</h3><p>Working-memory span.</p><span class="trig">Trigger · &lt; 6 items</span><a href="https://www.nasa.gov/missions/station/iss-research/peak-performance-in-microgravity/" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+<article class="hazard"><div class="n">03 · RESPIRATORY RESERVE</div><h3>Breath hold</h3><p>Respiratory-reserve proxy, not a NASA-validated test.</p><span class="trig">Trigger · &lt; 25 s</span><a href="https://ntrs.nasa.gov/citations/20040089966" target="_blank" rel="noreferrer">NASA source ↗</a></article>
+</div></section>
+
+
+</div></div><section id="consoleView" hidden><div class="console-head"><div><b>Mission computer link active</b><span>Synthetic reading packet imported from the vehicle mission computer.</span></div><span class="connected-pill" id="consoleAck">● ONBOARD CONSOLE · WAITING FOR DATA</span></div><iframe id="dashboardFrame" title="uranuß Health Monitor"></iframe></section></main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),STORE='uranus-flow-demo-v3';
+const blank=()=>({links:{wr:true},records:[],events:[],caseN:1,net:{delay:1000,dropNext:false}});
+let state;try{state=JSON.parse(localStorage.getItem(STORE))||blank()}catch{state=blank()}
+state.links={wr:state.links?.wr!==false};state.net=state.net||{delay:1000,dropNext:false};state.records=state.records||[];state.events=state.events||[];state.records.forEach(r=>{if(r.wrState==='sending')r.wrState='queued'});let wrBusy=false;
+const stamp=()=>new Date().toISOString(),clock=s=>new Date(s).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){localStorage.setItem(STORE,JSON.stringify(state));render()}
+function raw(text){state.events.push({at:stamp(),text});if(state.events.length>80)state.events=state.events.slice(-80)}
+function event(text){raw(text);save()}
+function label(p){return p==='urgent'?'ALERT':p==='mission'?'WATCH':'ROUTINE'}
+function card(r,stage){const phase=stage==='device'?'SAVED ON WEARABLE':r.rocket?'SAVED ON MISSION COMPUTER':r.wrState==='sending'?'TRANSFERRING…':r.wrState==='retry'?'RETRY QUEUED':'QUEUED';return '<div class="rec '+(r.priority==='urgent'?'high':r.priority==='mission'?'priority':'')+'"><b>'+label(r.priority)+' · '+safe(r.scenarioLabel)+'</b><span class="meta">'+safe(r.id)+' · '+clock(r.at)+' · HR '+r.values.hr+' bpm · Temp '+r.values.temp+' °C · '+phase+'</span></div>'}
+function drawList(id,items,stage,empty){$(id).innerHTML=items.length?items.map(r=>card(r,stage)).join(''):'<div class="empty">'+empty+'</div>'}
+const RULES={fever:{key:'temp',op:'>=',limit:38,label:'Temperature demo trigger',priority:'urgent'},radiation:{key:'rad',op:'>=',limit:2500,label:'Dosimeter demo trigger',priority:'mission'},isolation:{key:'sleep',op:'<',limit:5,label:'Sleep-log demo trigger',priority:'mission'},gravity:{key:'crewReport',op:'===',limit:true,label:'Crew-reported symptom',priority:'urgent'},habitat:{key:'co2',op:'>=',limit:5000,label:'Cabin CO₂ demo trigger',priority:'mission'},distance:{key:'delay',op:'>=',limit:5000,label:'Link-latency demo trigger',priority:'mission'},fastbreath:{key:'resp',op:'>=',limit:21,label:'Respiratory-rate demo trigger',priority:'mission'},fasting:{key:'glu',op:'<',limit:70,label:'Fasting-glucose demo trigger',priority:'mission'},postmeal:{key:'glu',op:'>=',limit:140,label:'Post-meal glucose demo trigger',priority:'mission'},lowglu:{key:'glu',op:'<',limit:60,label:'Low-glucose demo trigger',priority:'urgent'},dehydration:{key:'usg',op:'>=',limit:1.02,label:'Urine-concentration demo trigger',priority:'mission'},nominal:{key:'hr',op:'>=',limit:140,label:'Heart-rate demo trigger',priority:'mission'},lowo2:{key:'spo',op:'<',limit:90,label:'SpO₂ demo trigger',priority:'urgent'},co2rise:{key:'co2',op:'>=',limit:5000,label:'Cabin CO₂ rise demo trigger',priority:'mission'},poorsleep:{key:'sleep',op:'<',limit:5,label:'Sleep-log demo trigger',priority:'mission'}};
+function ruleFor(ids,values){ids=(ids||[]).filter(i=>RULES[i]);if(!ids.length)return {priority:'routine',text:'No scenario rule selected; routine sample stored.'};const rank={urgent:0,mission:1,routine:2},hits=[];ids.forEach(id=>{const rule=RULES[id];let match=false;if(rule.key==='crewReport')match=values.crewReport===true;else if(rule.key==='delay')match=(state.net.delay||0)>=rule.limit;else if(rule.op==='>=')match=Number(values[rule.key])>=rule.limit;else match=Number(values[rule.key])<rule.limit;if(match)hits.push(rule)});if(!hits.length)return {priority:'routine',text:'No alert rule matched; record stored for crew review.'};hits.sort((a,b)=>rank[a.priority]-rank[b.priority]);return {priority:hits[0].priority,text:hits.map(r=>r.label+' matched ('+r.op+' '+r.limit+')').join('; ')+'. Display a local alert and keep the reading in the onboard log.'}}
+function ordered(items){const rank={urgent:0,mission:1,routine:2};return items.sort((a,b)=>(rank[a.priority]??2)-(rank[b.priority]??2)||a.at.localeCompare(b.at))}
+function pump(){if(wrBusy||!state.links.wr)return;const r=ordered(state.records.filter(x=>!x.rocket&&x.wrState!=='sending'))[0];if(!r)return;wrBusy=true;r.wrState='sending';raw(label(r.priority)+' priority packet transferring to vehicle computer: '+r.id);save();setTimeout(()=>{if(!state.links.wr){r.wrState='queued';raw('Wearable link lost; '+r.id+' retained on the wearable.');wrBusy=false;save();return}if(state.net.dropNext){state.net.dropNext=false;r.wrState='retry';r.retryCount=(r.retryCount||0)+1;raw('Simulated packet loss; '+r.id+' retained and queued for retry.');wrBusy=false;save();setTimeout(pump,Math.max(250,state.net.delay));return}r.rocket=true;r.rocketAt=stamp();r.wrState='delivered';const checked=ruleFor(r.scenarioIds||(r.scenarioId?[r.scenarioId]:[]),r.values);r.priority=checked.priority;r.ruleText=checked.text;raw('Vehicle computer received and stored '+r.id+'. Fixed-rule check completed: '+label(r.priority)+'.');save();wrBusy=false;pump()},Math.max(250,state.net.delay))}
+function render(){const rows=state.records.slice().reverse();drawList('deviceRecords',rows,'device','No records yet');drawList('rocketRecords',rows.filter(r=>r.rocket),'rocket','Waiting for wearable data');$('urgentQueue').textContent=state.records.filter(r=>r.priority==='urgent').length+' pending / transferring';$('missionQueue').textContent=state.records.filter(r=>r.priority==='mission').length+' pending / transferring';$('routineQueue').textContent=state.records.filter(r=>r.priority==='routine').length+' pending / transferring';$('mission').textContent='MISSION: DEMO-'+String(state.caseN).padStart(2,'0');$('netLabel').textContent='WEARABLE LINK: '+(state.links.wr?'ONLINE':'OFFLINE');$('dropNext').textContent=state.net.dropNext?'Drop next packet: armed':'Drop next packet: off';$('latency').value=String(Math.round(state.net.delay/1000));$('wireWR').classList.toggle('off',!state.links.wr);$('simDot').classList.toggle('off',!state.links.wr);$('mwr').classList.toggle('off',!state.links.wr);$('mwr').textContent='↓ wearable ↔ vehicle link '+(state.links.wr?'online':'OFFLINE');const last=state.records.at(-1);$('openDashboard').disabled=!(last&&last.rocket);$('navConsole').disabled=!(last&&last.rocket);$('wearStatus').innerHTML='<i class="dot"></i>'+(last?'Latest sample saved · '+clock(last.at):'Ready · sensor simulator');$('rocketStatus').innerHTML='<i class="dot"></i>'+(last?.rocket?'Data stored · onboard rules checked':state.links.wr?'Standby':'Wearable link offline');$('rocketStatus').className='status'+(state.links.wr||last?.rocket?'':' offline');$('s1').textContent=last?last.id+' saved on wearable · '+clock(last.at):'Waiting for a reading.';$('s2').textContent=last?.rocket?'Received and stored on the mission computer.':last?'Saved on wearable; transfer '+(state.links.wr?'in progress':'queued until link returns')+'.':'Transferred over wearable link.';$('s3').textContent=last?.rocket?'Fixed-rule check completed; no AI used.':last?'Rule check runs after onboard receipt.':'Waiting for the reading to arrive.';$('s4').textContent=last?.rocket?(last.priority==='routine'?'No local alert; routine record stored.':'Local '+label(last.priority).toLowerCase()+' displayed to crew.'):'Displayed on the onboard console when a demo rule matches.';window.uranusSyncControls&&window.uranusSyncControls()}
+const SCENARIOS={fever:{id:'fever',label:'Crew reports fever',summary:'Synthetic wearable temperature sample. The onboard computer checks the configured demo trigger and displays an alert locally; it does not diagnose.',values:{temp:38.3}},radiation:{id:'radiation',label:'High-radiation zone',summary:'Synthetic dosimeter reading. This environmental measurement stays distinct from crew biometrics; the onboard rule only flags a demo trigger.',env:'mars',values:{rad:2700}},isolation:{id:'isolation',label:'Isolation and sleep loss',summary:'Synthetic sleep-log and mood context. The computer flags the configured demo condition for crew awareness; it does not infer a mental-health diagnosis.',values:{sleep:4.1,mood:2.5,hrv:29}},gravity:{id:'gravity',label:'Gravity transition',summary:'Scenario includes a crew-reported dizziness symptom during a gravity transition. That report triggers a local alert; no numeric medical threshold is used.',env:'moon',values:{sys:88,dia:58,motion:18,crewReport:true}},habitat:{id:'habitat',label:'Habitat sensor alert',summary:'Synthetic cabin CO₂ telemetry from a habitat sensor, separate from the wearable. The vehicle computer displays a local environmental alert when the demo rule matches.',values:{co2:6200,noise:72}},distance:{id:'distance',label:'Delayed communication link',summary:'The link delay is simulated while records remain onboard. There is no ground-computer screen or clinician workflow in this demo.',delay:8000,values:{}},nominal:{id:'nominal',label:'Nominal',summary:'Baseline synthetic crew reading with every channel inside the demo ranges. No alert rule should match, so the record is stored as routine.',values:{hr:72,spo:98,temp:36.6,sleep:7.4,co2:2800}},lowo2:{id:'lowo2',label:'Low oxygen',summary:'Synthetic SpO₂ drop with a raised heart rate. The onboard rule flags the demo trigger for the crew; it does not diagnose the cause.',values:{hr:108,spo:88,co2:2600}},co2rise:{id:'co2rise',label:'CO₂ rise',summary:'Synthetic cabin CO₂ climbing above the demo trigger, with a slightly raised heart rate and lower SpO₂. The environmental reading stays separate from crew biometrics.',values:{co2:5600,hr:95,spo:94}},fastbreath:{id:'fastbreath',label:'Fast breathing',summary:'Synthetic respiratory rate above the demo range, with a slightly raised heart rate and lower SpO₂. The rule flags a demo trigger; it does not diagnose the cause.',values:{resp:26,hr:98,spo:95}},fasting:{id:'fasting',label:'Fasting glucose',summary:'Synthetic fasting blood glucose (mg/dL) inside the demo range. No alert rule should match, so the record is stored as routine.',values:{glu:82}},postmeal:{id:'postmeal',label:'Post-meal glucose',summary:'Synthetic post-meal blood glucose (mg/dL) above the demo target. The computer flags it for crew awareness only; it does not recommend treatment.',values:{glu:165}},lowglu:{id:'lowglu',label:'Low glucose',summary:'Synthetic low blood glucose (mg/dL) with a slightly raised heart rate. The onboard rule raises a local alert; it does not diagnose or recommend treatment.',values:{glu:52,hr:96}},dehydration:{id:'dehydration',label:'Dehydration',summary:'Synthetic concentrated urine (specific gravity) with a slightly raised heart rate, a sign of fluid shift or under-hydration. The rule flags a demo trigger only.',values:{usg:1.028,hr:92}},poorsleep:{id:'poorsleep',label:'Poor sleep',summary:'Synthetic sleep log well under the demo target. The computer flags it for crew awareness and does not infer a cause or a diagnosis.',values:{sleep:4.5,hr:82}}};
+window.URANUS_SCENARIOS=SCENARIOS;
+function combine(ids){const list=ids.map(i=>SCENARIOS[i]).filter(Boolean),values={},MIN=new Set(['spo','sleep','mood','hrv','sys','dia','motion']),MAX=new Set(['hr','temp','co2','rad','noise','resp','usg']);list.forEach(s=>Object.entries(s.values||{}).forEach(([k,v])=>{if(!(k in values))values[k]=v;else if(MIN.has(k))values[k]=Math.min(values[k],v);else if(MAX.has(k))values[k]=Math.max(values[k],v);else values[k]=v}));const delay=Math.max(0,...list.map(s=>s.delay||0));return {ids:list.map(s=>s.id),id:list.map(s=>s.id).join('+'),label:list.map(s=>s.label).join(' + '),env:list.map(s=>s.env).find(Boolean),delay:delay||undefined,values}}
+function measure(preset=null){state.caseN++;const env=preset?.env||$('missionEnv').value,values=Object.assign({hr:65+Math.floor(Math.random()*20),spo:97+Math.floor(Math.random()*3),temp:+(36.3+Math.random()*.7).toFixed(1),motion:42,sys:118,dia:76,glu:92,rad:env==='iss'?520:env==='moon'?1250:1800,sleep:7.4,mood:4,ex:env==='iss'?95:env==='moon'?80:75,hrv:54,co2:2800,noise:56,resp:14+Math.floor(Math.random()*4),usg:1.012},preset?.values||{}),check=ruleFor(preset?.ids,values);$('missionEnv').value=env;const r={id:'URN-'+String(state.caseN).padStart(3,'0'),at:stamp(),env,priority:'routine',scenarioId:preset?.id||null,scenarioIds:preset?.ids||[],scenarioLabel:preset?.label||'Routine check',values,ruleText:'Waiting for onboard fixed-rule check.',rocket:false,wrState:'queued'};state.records.push(r);raw(r.scenarioLabel+' captured and saved on wearable ('+label(r.priority)+'): '+r.id);save();pump()}
+$('measure').onclick=()=>measure();$('runScenario').onclick=()=>{const ids=window.uranusScenarioIds?window.uranusScenarioIds():[],preset=combine(ids.length?ids:['nominal']);if(preset.delay){$('latency').value=String(preset.delay/1000);state.net.delay=preset.delay}measure(preset)};$('latency').value=String(Math.round(state.net.delay/1000));$('latency').onchange=e=>{state.net.delay=Number(e.target.value)*1000;event('Wearable transfer delay set to '+e.target.value+' seconds.')};$('dropNext').onclick=()=>{state.net.dropNext=!state.net.dropNext;event(state.net.dropNext?'Next wearable transfer will simulate packet loss.':'Packet-loss simulation cancelled.')};document.querySelectorAll('[data-link]').forEach(b=>b.onclick=()=>{state.links.wr=!state.links.wr;event(state.links.wr?'Wearable-to-vehicle link restored.':'Wearable-to-vehicle link disabled; onboard data flow paused.');if(state.links.wr)pump()});
+function switchView(view){const on=view==='console';$('missionView').hidden=on;$('consoleView').hidden=!on;$('navMission').classList.toggle('active',!on);$('navConsole').classList.toggle('active',on)}
+$('openDashboard').onclick=()=>{const r=[...state.records].reverse().find(x=>x.rocket);if(!r)return;const payload={...r.values,spo2:r.values.spo};delete payload.spo;const frame=$('dashboardFrame'),url=new URL('health_monitor.html',location.href);frame.onload=()=>frame.contentWindow.postMessage({type:'uranus-health-data',packetId:r.id,scenario:r.scenarioId||'routine',label:r.scenarioLabel,env:r.env||'iss',at:r.at,source:{type:'synthetic_simulator',deviceId:'URANUS-WEARABLE-DEMO'},units:{hr:'bpm',spo2:'%',temp:'Cel',sleep:'h',co2:'ppm',rad:'demo_units',resp:'/min',glu:'mg/dL',usg:'SG'},values:payload},'*');frame.src=url.href;switchView('console');event('Opened the orbital crew console and sent the synthetic record from onboard storage.')};
+window.addEventListener('message',e=>{if(e.source!==$('dashboardFrame').contentWindow||!e.data||e.data.type!=='uranus-health-ack')return;$('consoleAck').textContent='● '+e.data.received.length+' CHANNELS IMPORTED'});$('navMission').onclick=()=>switchView('mission');$('navConsole').onclick=()=>{if(!$('navConsole').disabled)switchView('console')};$('reset').onclick=()=>{if(confirm('Clear onboard demo records in this browser?')){localStorage.removeItem(STORE);state=blank();save();event('Onboard demo flow cleared.')}};render();pump();
+})();
+</script><script>
+(function(){
+var cv=document.getElementById('velaris');if(!cv)return;
+var gl=cv.getContext('webgl',{antialias:false,alpha:false,powerPreference:'low-power'});if(!gl)return;
+var VS='attribute vec2 position;varying vec2 vUv;void main(){vUv=position*0.5+0.5;gl_Position=vec4(position,0.0,1.0);}';
+var FS='precision highp float;varying vec2 vUv;uniform vec2 u_resolution;uniform float u_time;uniform float u_grain;uniform vec3 u_colors[4];uniform vec3 u_bg;'
++'vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}'
++'float snoise(vec2 v){const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;i=mod(i,289.0);vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);m=m*m;m=m*m;vec3 x=2.0*fract(p*C.www)-1.0;vec3 h=abs(x)-0.5;vec3 ox=floor(x+0.5);vec3 a0=x-ox;m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);}'
++'void main(){vec2 uv=vUv;float ratio=u_resolution.x/u_resolution.y;vec2 p=uv-0.5;p.x*=ratio;float t=u_time*0.1;'
++'float n1=snoise(p*0.4+vec2(t*0.2,-t*0.3));float n2=snoise(p*0.55+vec2(-t*0.15,t*0.25)+n1*0.25);float n3=snoise(p*0.75+vec2(t*0.1,-t*0.2)+n2*0.2);'
++'vec3 col=u_bg;float dist=length(p)*1.5;float vignette=1.0-smoothstep(0.3,1.2,dist);'
++'col=mix(col,u_colors[0],smoothstep(-0.2,0.5,n1)*0.85);col=mix(col,u_colors[1],smoothstep(-0.1,0.6,n2)*0.7);col=mix(col,u_colors[2],smoothstep(-0.3,0.4,n3)*0.6);col=mix(col,u_colors[3],smoothstep(0.0,0.7,n1*n2)*0.5);'
++'float glow=smoothstep(0.8,0.0,dist)*0.3;col+=u_colors[1]*glow;col=mix(col*0.2,col,vignette);'
++'float wy=smoothstep(0.62,0.0,uv.y);float wn=snoise(vec2(p.x*0.9+u_time*0.9,uv.y*2.2-u_time*0.5))*0.5+0.5;float wn2=snoise(vec2(p.x*1.6-u_time*0.6,uv.y*3.0+u_time*0.4))*0.5+0.5;float warm=wy*wy*(0.28+0.5*wn+0.25*wn2);col=mix(col,vec3(1.0,0.42,0.08),clamp(warm,0.0,0.75));col+=vec3(0.9,0.3,0.05)*wy*wy*wn*0.12;'
++'float grain=fract(sin(dot(uv,vec2(12.9898,78.233))*1.0)*43758.5453+u_time);col+=(grain-0.5)*u_grain*0.1;gl_FragColor=vec4(col,1.0);}';
+function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o}
+var pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);
+if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return;gl.useProgram(pr);
+var bf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+var ps=gl.getAttribLocation(pr,'position');gl.enableVertexAttribArray(ps);gl.vertexAttribPointer(ps,2,gl.FLOAT,false,0,0);
+var L={r:gl.getUniformLocation(pr,'u_resolution'),t:gl.getUniformLocation(pr,'u_time'),g:gl.getUniformLocation(pr,'u_grain'),c:gl.getUniformLocation(pr,'u_colors'),b:gl.getUniformLocation(pr,'u_bg')};
+function rgb(h){h=h.replace('#','');return[parseInt(h.slice(0,2),16)/255,parseInt(h.slice(2,4),16)/255,parseInt(h.slice(4,6),16)/255]}
+/* space black + electric blue */
+var COLORS=['#2f7bff','#1447d6','#06176b','#000000'],BG='#000000',SPEED=1.1,GRAIN=0.25;
+var flat=new Float32Array(COLORS.flatMap(rgb)),bg=rgb(BG);
+function size(){var d=Math.min(window.devicePixelRatio||1,1.5);cv.width=Math.round(innerWidth*d*.6);cv.height=Math.round(innerHeight*d*.6);gl.viewport(0,0,cv.width,cv.height)}
+size();addEventListener('resize',size);
+var still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function draw(t){gl.uniform2f(L.r,cv.width,cv.height);gl.uniform1f(L.t,t*0.001*SPEED);gl.uniform1f(L.g,GRAIN);gl.uniform3f(L.b,bg[0],bg[1],bg[2]);gl.uniform3fv(L.c,flat);gl.drawArrays(gl.TRIANGLE_STRIP,0,4)}
+function loop(t){draw(t);if(!still)requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script><script>(function(){
+var $=function(i){return document.getElementById(i)};
+var env=$('missionEnv'),lat=$('latency'),run=$('runScenario'),S=window.URANUS_SCENARIOS;
+if(!env||!lat||!run||!S)return;
+function fire(el){el.dispatchEvent(new Event('change',{bubbles:true}))}
+function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
+/* Normal is always the first button of each bar; the rest toggle independently, so any combination can run together */
+var BARS={
+ vitals:{host:$('vitalsBar'),normal:'Normal',items:[['lowo2','Low oxygen'],['co2rise','CO₂ rise'],['fastbreath','Fast breathing'],['poorsleep','Poor sleep'],['fasting','Fasting glucose'],['postmeal','Post-meal glucose'],['lowglu','Low glucose'],['dehydration','Dehydration']],none:'nominal',on:{}},
+ hazards:{host:$('hazardsBar'),normal:'Normal',items:[['fever','Crew fever'],['radiation','High radiation'],['isolation','Isolation / sleep loss'],['gravity','Gravity transition'],['habitat','Habitat alert'],['distance','Comms delay']],none:null,on:{}}
+};
+var EXCL=[['fasting','postmeal','lowglu']];/* one glucose state at a time */
+var NORMAL_INFO={vitals:'Normal crew vitals: baseline synthetic readings inside the demo ranges.',hazards:'Normal mission: no hazard injected; the environment stays at the baseline for the selected mission environment.'};
+Object.keys(BARS).forEach(function(k){var B=BARS[k];
+ B.normalBtn=mk('button','nbtn normal',B.normal);B.normalBtn.type='button';B.normalBtn.setAttribute('aria-pressed','true');
+ B.normalBtn.onclick=function(){B.on={};sync()};B.host.appendChild(B.normalBtn);
+ B.btns={};B.items.forEach(function(it){var b=mk('button','nbtn',it[1]);b.type='button';b.setAttribute('aria-pressed','false');
+  b.onclick=function(){if(B.on[it[0]])delete B.on[it[0]];else{B.on[it[0]]=true;EXCL.forEach(function(g){if(g.indexOf(it[0])>-1)g.forEach(function(o){if(o!==it[0])delete B.on[o]})})}sync()};B.btns[it[0]]=b;B.host.appendChild(b)})});
+function chosen(k){return BARS[k].items.map(function(i){return i[0]}).filter(function(id){return BARS[k].on[id]})}
+window.uranusScenarioIds=function(){return chosen('vitals').concat(chosen('hazards'))};
+function seg(id,select){var h=$(id);Array.prototype.forEach.call(select.options,function(o){var b=mk('button','segb',o.textContent);b.type='button';b.setAttribute('role','radio');b.dataset.v=o.value;b.onclick=function(){select.value=o.value;fire(select);sync()};h.appendChild(b)})}
+seg('envSeg',env);seg('latSeg',lat);
+function sync(){
+ var names=[];
+ Object.keys(BARS).forEach(function(k){var B=BARS[k],sel=chosen(k);
+  B.normalBtn.classList.toggle('on',!sel.length);B.normalBtn.setAttribute('aria-pressed',!sel.length);
+  B.items.forEach(function(it){var on=!!B.on[it[0]];B.btns[it[0]].classList.toggle('on',on);B.btns[it[0]].setAttribute('aria-pressed',on)});
+  sel.forEach(function(id){names.push(S[id].label)})});
+ $('activeCombo').textContent=names.length?names.join(' + '):'Normal crew vitals · Normal mission';
+ var info=$('scenarioInfo');info.textContent='';
+ [['vitals','Crew vitals'],['hazards','Mission hazards']].forEach(function(p){var sel=chosen(p[0]);
+  if(!sel.length){var q=mk('p');q.appendChild(mk('b',null,p[1]+' · Normal: '));q.appendChild(document.createTextNode(NORMAL_INFO[p[0]].replace(/^[^:]*: /,'')));info.appendChild(q);return}
+  sel.forEach(function(id){var q=mk('p');q.appendChild(mk('b',null,S[id].label+': '));q.appendChild(document.createTextNode(S[id].summary));info.appendChild(q)})});
+ [['envSeg',env],['latSeg',lat]].forEach(function(p){Array.prototype.forEach.call($(p[0]).children,function(b){var on=b.dataset.v===p[1].value;b.classList.toggle('on',on);b.setAttribute('aria-checked',on)})});
+ run.textContent=names.length?'Run · '+(names.length>1?names.length+' selected':names[0]):'Run · Normal'}
+window.uranusSyncControls=sync;sync();
+})();
+</script></body></html>
