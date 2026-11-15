@@ -30,8 +30,8 @@ At its core, the system simulates and visualizes critical astronaut telemetry, l
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repository-url>
-   cd <repository-folder>
+   git clone <Nasa-Health-Monitoring-Simulation-Environment>
+   cd <Nasa-Health-Monitoring-Simulation-Environment>
    ```
 
 2. **Launch the environment:**
